@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/yanick/json-schema-shorthand/issues"
   },
-  "homepage": "https://github.com/yanick/json-schema-shorthand#readme"
+  "homepage": "https://github.com/yanick/json-schema-shorthand#readme",
+  "dependencies": {
+    "lodash": "^4.14.1"
+  }
 }
