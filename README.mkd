@@ -1,0 +1,6 @@
+# json-schema-shorthand
+
+[JSON Schema](http://json-schema.org/) is a useful beast, 
+but its schema definition can be a little bit more long-winded
+than necessary. This module allows to use a few shortcuts that
+will be expanded into their canonical form.
