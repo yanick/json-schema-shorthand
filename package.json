@@ -4,7 +4,7 @@
   "description": "Shortcuts for json schema definitions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register './lib/**/*.spec.js'"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,13 @@
   "homepage": "https://github.com/yanick/json-schema-shorthand#readme",
   "dependencies": {
     "lodash": "^4.14.1"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
   }
 }
