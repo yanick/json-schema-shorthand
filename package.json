@@ -2,7 +2,7 @@
   "name": "json-schema-shorthand",
   "version": "0.0.1",
   "description": "Shortcuts for json schema definitions",
-  "main": "index.js",
+  "main": "dist-node/json-schema-shorthand.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register",
     "build-node": "babel src --out-dir dist-node",
@@ -10,7 +10,7 @@
     "browserify": "browserify --standalone helloJavascript dist-node | derequire > dist/hello-javascript.js",
     "uglify": "uglifyjs -mc < dist/hello-javascript.js > dist/hello-javascript.min.js",
     "clean": "rm -fr dist/* dist-node/*",
-    "build": "npm run clean && npm run build-node && npm run build-browser",
+    "build": "npm run clean && npm run build-node",
     "prepublish": "npm run build"
   },
   "repository": {
