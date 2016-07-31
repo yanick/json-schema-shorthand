@@ -34,5 +34,37 @@ describe( 'shortcuts', () => {
             .deep.equal( { required: [ 'foo' ], properties: { foo: { } } }  );
     });
 
+    [ 'allOf', 'anyOf', 'oneOf' ].forEach( keyword =>
+        it( 'recurses down ' + keyword, () => {
+            let short = {};
+            short[keyword] = [ 'number' ];
+
+            let expected = {};
+
+            expected[keyword] = [ { type: 'number' } ];
+
+            expect( shorthand( short ) )
+                .deep.equal( expected );
+        })
+    );
+
+    it( 'expands definitions', () => {
+        expect( shorthand( { 'definitions': {
+            "foo": 'object'
+        }} ) )
+            .deep.equal({
+                definitions: {
+                    foo: { type: 'object' }
+                }
+        });
+    });
+
+    it( 'expands not', () => {
+        expect( shorthand( { 'not': 'object' } ) )
+            .deep.equal({
+                not: { type: 'object' }
+            });
+    });
+
 
 });

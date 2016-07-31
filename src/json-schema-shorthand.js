@@ -11,11 +11,23 @@ function sh_json_schema(obj) {
         delete obj.object;
     }
 
-    if( obj.hasOwnProperty('definitions') ) {
-        obj.definitions = _.mapValues(obj.definitions, 
-                v => sh_json_schema(v)
-        );
-    }
+    [ 'definitions' ]
+        .filter( k => obj.hasOwnProperty(k) )
+        .forEach( keyword => {
+            obj[keyword] = _.mapValues( obj[keyword], v => sh_json_schema(v) )
+    } );
+
+    [ 'anyOf', 'allOf', 'oneOf' ]
+        .filter( k => obj.hasOwnProperty(k) )
+        .forEach( keyword => {
+            obj[keyword] = obj[keyword].map( v => sh_json_schema(v) )
+    } );
+
+    [ 'not' ]
+        .filter( k => obj.hasOwnProperty(k) )
+        .forEach( keyword => {
+            obj[keyword] = sh_json_schema(obj[keyword])
+    } );
 
     if( obj.hasOwnProperty('array') ) {
         obj.type = 'array';
