@@ -25,7 +25,7 @@ function sh_json_schema(obj) {
 
     if (obj.hasOwnProperty('array')) {
         obj.type = 'array';
-        obj.items = sh_json_schema(obj.array);
+        obj.items = Array.isArray(obj.array) ? obj.array.map(sh_json_schema) : sh_json_schema(obj.array);
         delete obj.array;
     }
 
