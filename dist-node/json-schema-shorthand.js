@@ -17,11 +17,27 @@ function sh_json_schema(obj) {
         delete obj.object;
     }
 
-    if (obj.hasOwnProperty('definitions')) {
-        obj.definitions = _.mapValues(obj.definitions, function (v) {
+    ['definitions'].filter(function (k) {
+        return obj.hasOwnProperty(k);
+    }).forEach(function (keyword) {
+        obj[keyword] = _.mapValues(obj[keyword], function (v) {
             return sh_json_schema(v);
         });
-    }
+    });
+
+    ['anyOf', 'allOf', 'oneOf'].filter(function (k) {
+        return obj.hasOwnProperty(k);
+    }).forEach(function (keyword) {
+        obj[keyword] = obj[keyword].map(function (v) {
+            return sh_json_schema(v);
+        });
+    });
+
+    ['not'].filter(function (k) {
+        return obj.hasOwnProperty(k);
+    }).forEach(function (keyword) {
+        obj[keyword] = sh_json_schema(obj[keyword]);
+    });
 
     if (obj.hasOwnProperty('array')) {
         obj.type = 'array';
