@@ -2,6 +2,7 @@ Revision history for json-schema-shorthand
 
 $NEXT
   - Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
+  - Add 'install' and 'synopsis' sections in doc.
 
 0.0.1 2016-07-31
   - Initial release

@@ -9,6 +9,32 @@ will be expanded into their canonical form.
 properties this module should expand and does not. So don't trust it
 blindly. If you  hit such a case, raise a ticket and I'll refine the process.
 
+## To install
+
+    npm install json-schema-shorthand
+
+## Typical use
+
+    var shorthand = require('json-schema-shorthand').default;
+
+    var abbrev = {
+        object: {
+            foo: 'number',
+            bar: {
+                array: 'string'
+            },
+        }
+    };
+
+    var expanded = shorthand( abbrev );
+    // expanded === {
+    //    type: 'object',
+    //    properties: {
+    //        foo: { type: 'number' },
+    //        bar: { type: 'array', items: { type: 'string' } }
+    //    }
+    // }
+
 ## Shorthands
 
 ### Types as string
