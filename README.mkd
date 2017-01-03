@@ -105,8 +105,19 @@ up to the `required` attribute of its parent object.
           baz: { }                                bar: {},
         }                                         baz: {}
     }                                       }
-                                            
 
+The type or `$ref` of a field can also be appended a `!` to mark it
+as required.
+
+    shorthand                              expanded
+    ------------------------               ---------------------------
+
+    foo: {                                  foo: {
+        properties: {                           required: [ 'bar', 'baz' ],
+          bar: 'number!'                        properties: { 
+          baz: '#baz_type!'                       bar: {   type: 'number' },
+        }                                         baz: { '$ref': '#baz_type' }
+    }                                       }
 
 
 

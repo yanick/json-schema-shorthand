@@ -35,6 +35,16 @@ tap.test( 'shortcuts', t => {
         { required: [ 'foo' ], properties: { foo: { } } },
         'expands required' );
 
+    t.shorthand( { properties: { foo: 'number!', bar: '#baz!' } },
+        {
+            required: [ 'bar', 'foo' ], 
+            properties: { 
+                foo: { type: 'number' },
+                bar: { '$ref': '#baz' } 
+            } 
+        },
+        'expands required when using !' );
+
     [ 'allOf', 'anyOf', 'oneOf' ].forEach( keyword => {
             let short = {};
             short[keyword] = [ 'number' ];
