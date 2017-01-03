@@ -1,6 +1,6 @@
 Revision history for json-schema-shorthand
 
-$NEXT
+0.2.0 2017-01-03
   - Properties can be made required via a '!' suffix.
   - Drop Mocha and Chai for TAP for testing.
 

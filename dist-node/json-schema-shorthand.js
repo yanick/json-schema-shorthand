@@ -8,8 +8,15 @@ var _ = require('lodash');
 
 function sh_json_schema(obj) {
     if (typeof obj === 'string') {
-        return obj[0] === '#' ? { '$ref': obj } : { type: obj };
+        obj = obj[0] === '#' ? { '$ref': obj } : { type: obj };
     }
+
+    ['$ref', 'type'].forEach(function (field) {
+        if (/!$/.test(obj[field])) {
+            obj.required = true;
+            obj[field] = obj[field].replace(/!$/, '');
+        }
+    });
 
     if (obj.hasOwnProperty('object')) {
         obj.type = 'object';
@@ -62,6 +69,7 @@ function sh_json_schema(obj) {
         });
 
         if (required.length > 0) {
+            required.sort();
             obj.required = required;
         }
     }
