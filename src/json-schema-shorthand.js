@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-function sh_json_schema(obj) {
+function sh_json_schema(obj={}) {
     if( typeof obj === 'string' ) {
         obj = ( obj[0] === '#' ) ? { '$ref': obj } : { type: obj };
     }

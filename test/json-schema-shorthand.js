@@ -7,6 +7,8 @@ tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, messag
 
 tap.test( 'shortcuts', t => {
 
+    t.shorthand( undefined, {}, 'passing "undefined"' );
+
     t.shorthand( 'string', { type: 'string' }, 'type as string' );
 
     t.shorthand( { object: { foo: 'string' } },  
