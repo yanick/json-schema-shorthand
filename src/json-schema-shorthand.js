@@ -1,5 +1,6 @@
 const _ = require('lodash');
 
+export default
 function sh_json_schema(obj={}) {
     if( typeof obj === 'string' ) {
         obj = obj[0] === '$' ? { '$ref': obj.slice(1) }
@@ -80,8 +81,3 @@ function sh_json_schema(obj={}) {
 
     return obj;
 }
-
-export default function shorthand_json(schema) {
-    return sh_json_schema(schema);
-}
-
