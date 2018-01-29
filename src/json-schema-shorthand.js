@@ -40,7 +40,7 @@ function sh_json_schema(obj={}) {
 
     if( obj.hasOwnProperty('array') ) {
         obj.type = 'array';
-        obj.items = Array.isArray(obj.array) ? obj.array.map(sh_json_schema) : sh_json_schema(obj.array);
+        obj.items = obj.array;
         delete obj.array;
     }
 
@@ -65,6 +65,15 @@ function sh_json_schema(obj={}) {
         if( required.length > 0 ) {
             required.sort();
             obj.required = required;
+        }
+    }
+
+    if( obj.hasOwnProperty('items') ) {
+        if( Array.isArray( obj.items ) ) {
+            obj.items = obj.items.map( sh_json_schema );
+        }
+        else {
+            obj.items = sh_json_schema( obj.items );
         }
     }
 

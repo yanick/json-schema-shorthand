@@ -78,3 +78,19 @@ tap.test( 'ref', t => {
 
     t.end();
 });
+
+tap.test( 'array', t => {
+    t.shorthand( { 'array': 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand( { type: 'array', items: 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand( { type: 'array', items: { type: 'number' } }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand(
+        { type: 'array', items: [ 'number' ] },
+        { type: 'array', items: [ { type: 'number' } ] },
+        'expands items' 
+    );
+
+    t.end();
+});
