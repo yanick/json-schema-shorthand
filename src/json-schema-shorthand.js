@@ -2,7 +2,9 @@ const _ = require('lodash');
 
 function sh_json_schema(obj={}) {
     if( typeof obj === 'string' ) {
-        obj = ( obj[0] === '#' ) ? { '$ref': obj } : { type: obj };
+        obj = obj[0] === '$' ? { '$ref': obj.slice(1) }
+            : obj[0] === '#' ? { '$ref': obj }
+            :                  { type: obj }
     }
 
     [ '$ref', 'type' ].forEach( field => {

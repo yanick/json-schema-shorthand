@@ -16,8 +16,6 @@ tap.test( 'shortcuts', t => {
         'object property'
     );
 
-    t.shorthand( '#foo', { '$ref': '#foo' }, 'expands #ref' );
-
     t.shorthand( { object: { foo: {}  } }, 
         { type: 'object', properties: { foo: { } } },
         'expands objects' 
@@ -72,4 +70,11 @@ tap.test( 'shortcuts', t => {
 
     t.end();
 
+});
+
+tap.test( 'ref', t => {
+    t.shorthand( '#foo', { '$ref': '#foo' }, 'expands #ref' );
+    t.shorthand( '$http://foo', { '$ref': 'http://foo' }, 'expands $ref' );
+
+    t.end();
 });
