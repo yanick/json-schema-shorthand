@@ -54,7 +54,7 @@ expands to
         "bar": { "type": "string" }
     }
 
-If the string begins with a `#`, the type is assumed to be a reference and
+If the string begins with a `#`, the type is assumed to be a local reference and
 `#type` is expanded to `{ "$ref": type }`.
 
     { "foo": "#/definitions/bar" } 
@@ -62,6 +62,15 @@ If the string begins with a `#`, the type is assumed to be a reference and
 becomes
 
     { "foo": { "$ref": "#/definitions/bar" } }
+
+If the string begins with a `$`, the type is assumed to be a general reference and
+`$type` is expanded to `{ "$ref": type }`.
+
+    { "foo": "$http://foo.com/bar" } 
+
+becomes
+
+    { "foo": { "$ref": "http://foo.com/bar" } }
 
 ### `object` property
 

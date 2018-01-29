@@ -7,14 +7,14 @@ tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, messag
 
 tap.test( 'shortcuts', t => {
 
+    t.shorthand( undefined, {}, 'passing "undefined"' );
+
     t.shorthand( 'string', { type: 'string' }, 'type as string' );
 
     t.shorthand( { object: { foo: 'string' } },  
         { type: 'object', properties: { foo: { type: 'string' } } },
         'object property'
     );
-
-    t.shorthand( '#foo', { '$ref': '#foo' }, 'expands #ref' );
 
     t.shorthand( { object: { foo: {}  } }, 
         { type: 'object', properties: { foo: { } } },
@@ -70,4 +70,27 @@ tap.test( 'shortcuts', t => {
 
     t.end();
 
+});
+
+tap.test( 'ref', t => {
+    t.shorthand( '#foo', { '$ref': '#foo' }, 'expands #ref' );
+    t.shorthand( '$http://foo', { '$ref': 'http://foo' }, 'expands $ref' );
+
+    t.end();
+});
+
+tap.test( 'array', t => {
+    t.shorthand( { 'array': 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand( { type: 'array', items: 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand( { type: 'array', items: { type: 'number' } }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+
+    t.shorthand(
+        { type: 'array', items: [ 'number' ] },
+        { type: 'array', items: [ { type: 'number' } ] },
+        'expands items' 
+    );
+
+    t.end();
 });

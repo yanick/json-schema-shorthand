@@ -1,12 +1,21 @@
-Revision history for json-schema-shorthand
+# Revision history for json-schema-shorthand
 
-0.2.0 2017-01-03
-  - Properties can be made required via a '!' suffix.
-  - Drop Mocha and Chai for TAP for testing.
+## NEXT
 
-0.1.0 2016-08-01
-  - Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
-  - Add 'install' and 'synopsis' sections in doc.
+## Improvements
+    * New shortcut: '$foo' expands to be `$ref: foo`.
 
-0.0.1 2016-07-31
-  - Initial release
+### Bug Fixes
+    * `shorthand()` deals gracefully with `null` argument.
+
+
+## 0.2.0 2017-01-03
+  * Properties can be made required via a '!' suffix.
+  * Drop Mocha and Chai for TAP for testing.
+
+## 0.1.0 2016-08-01
+  * Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
+  * Add 'install' and 'synopsis' sections in doc.
+
+## 0.0.1 2016-07-31
+    * Initial release
