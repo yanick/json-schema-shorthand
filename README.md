@@ -129,5 +129,17 @@ as required.
     }                                       }
 
 
+### `range` property
 
+Shortcut to set `minimum` and `maximum` in a single array. Two boolean values
+can also be provided to specify if the extrema are inclusive (`true` by
+default).
 
+    shorthand                              expanded
+    ------------------------               ---------------------------
+
+    foo: {                                  foo: {
+        type: 'number',                         type: 'number',
+        range: [ 5, 8, true, false ]             minimum: 5,
+    }                                            exclusiveMaximum: 8,
+                                            }

@@ -4,6 +4,7 @@
 
 ## Improvements
     * New shortcut: '$foo' expands to be `$ref: foo`.
+    * New 'range' shortcut.
 
 ### Bug Fixes
     * `shorthand()` deals gracefully with `null` argument.

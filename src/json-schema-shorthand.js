@@ -1,4 +1,11 @@
-const _ = require('lodash');
+import _ from 'lodash';
+
+function groomRange(min,max,min_inc=true,max_inc=true) { 
+    let props = {};
+    props[ min_inc ? 'minimum' : 'exclusiveMinimum' ] = min;
+    props[ max_inc ? 'maximum' : 'exclusiveMaximum' ] = max;
+    return props;
+}
 
 export default
 function sh_json_schema(obj={}) {
@@ -78,6 +85,10 @@ function sh_json_schema(obj={}) {
         }
     }
 
+    if( obj.hasOwnProperty('range') ) {
+        _.merge( obj, groomRange(...(obj.range) ) );
+        delete obj.range;
+    }
 
     return obj;
 }

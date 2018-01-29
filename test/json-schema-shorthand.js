@@ -94,3 +94,30 @@ tap.test( 'array', t => {
 
     t.end();
 });
+
+
+tap.test( 'range', t => {
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, true, false ] },
+        { type: 'number', minimum: 5, exclusiveMaximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8 ] },
+        { type: 'number', minimum: 5, maximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, true ] },
+        { type: 'number', minimum: 5, maximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, false ] },
+        { type: 'number', exclusiveMinimum: 5, maximum: 8 }
+    );
+
+
+    t.end();
+});
