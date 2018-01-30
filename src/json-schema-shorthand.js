@@ -9,34 +9,63 @@ function groomRange(min,max,min_inc=true,max_inc=true) {
 }
 
 function process_nbrItems(obj) {
-    let nbrItems = obj.nbrItems;
+    if( ! obj.hasOwnProperty('nbrItems') ) return obj;
 
-    return u.omit( 'nbrItems' )(
-        u({
-            minItems: Array.isArray(nbrItems) ? nbrItems[0] : nbrItems,
-            maxItems: Array.isArray(nbrItems) ? nbrItems[1] : nbrItems,
-        })(obj)
-    );
+    let nbrItems = obj.nbrItems;
+    let is_array = Array.isArray(nbrItems);
+
+    return u({
+        minItems: is_array ? nbrItems[0] : nbrItems,
+        maxItems: is_array ? nbrItems[1] : nbrItems,
+    }, u.omit('nbrItems')(obj) );
 }
 
 function process_range(obj) {
+    if( !obj.hasOwnProperty('range') ) return obj;
     return u.omit( 'range' )( 
         u( groomRange( ...(obj.range) )  )( obj )
     );
 }
 
-const transformations = [
-    { keyword: 'nbrItems', processor: process_nbrItems },
-    { keyword: 'range',    processor: process_range    },
-];
+//  expand the shorthand content of `items`
+const expand_items = u({
+    items: u.if( _.identity, 
+        items => Array.isArray(items) ? items.map( sh_json_schema ) : sh_json_schema(items)
+    )
+});
 
-function procress_transformations(obj) {
-    return transformations.reduce( (obj,t) => 
-        obj.hasOwnProperty(t.keyword) ? t.processor(obj) : obj
-    , obj );
+function groom_required_properties(obj) {
+    if( !obj.hasOwnProperty('properties') ) return obj;
+
+    let required = obj.required || [];
+
+    required = required.concat(
+        _.keys( _.pickBy( obj.properties, 'required' ) )
+    );
+    required.sort();
+
+    return u({ 
+        required:   u.if( required.length, required ),
+        properties: u.map( u.omit( 'required' ) )
+    })(obj);
 }
 
+const expand_properties = u.if( o => o.properties, { properties: u.map( sh_json_schema ) } );
 
+const process_array = obj => u.if(
+    obj.array,
+    { type: 'array', items: obj.array }
+)( u.omit( 'array', obj ) );
+
+const map_shorthand = u.if( _.identity, u.map(sh_json_schema) );
+
+const expand_not_and_definitions_and_composites = u({
+    not:         u.if( _.identity, sh_json_schema ),
+    definitions: map_shorthand,
+    anyOf:       map_shorthand,
+    allOf:       map_shorthand,
+    oneOf:       map_shorthand,
+});
 
 export default
 function sh_json_schema(obj={}) {
@@ -61,43 +90,15 @@ function sh_json_schema(obj={}) {
             properties: obj.object,
         })(obj));
 
-    obj = u.if( obj.hasOwnProperty('definitions'), {
-        definitions: u.map( sh_json_schema )
-    })(obj);
-
-    obj = u( _.fromPairs( 
-        [ 'anyOf', 'allOf', 'oneOf' ].map( k => 
-            [ k, u.if( _.identity, u.map(sh_json_schema) ) ] 
-        )
-    ))(obj);
-
-    obj = u.if( o => o.not, { not: sh_json_schema }, obj );
-
-    if( obj.hasOwnProperty('array') ) {
-        obj = u.omit( 'array', u( { type: 'array', items: obj.array }, obj ) );
-    }
-
-    obj = u.if( o => o.properties, { properties: u.map( sh_json_schema ) } )( obj );
-
-    if( obj.hasOwnProperty('properties') ) {
-        let required = obj.required || [];
-        required = required.concat(
-            _.keys( obj.properties ).filter(
-                k => obj.properties[k].required
-            )
-        );
-
-        obj = u({ properties: u.map( u.omit( 'required' ) ) })(obj);
-
-        required.sort();
-        obj = u.if(required.length, { required })(obj);
-    }
-
-    obj = u.if( o => o.items, {
-        items: items => Array.isArray(items) ? items.map( sh_json_schema ) : sh_json_schema(items)
-    } )(obj);
-
-    obj = procress_transformations(obj);
+    obj = _.flow([ 
+        expand_not_and_definitions_and_composites,
+        process_array,
+        expand_properties,
+        groom_required_properties,
+        expand_items,
+        process_nbrItems,
+        process_range,
+    ])( obj );
 
     return obj;
 }
