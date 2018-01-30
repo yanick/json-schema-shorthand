@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import u from 'updeep';
 
 function groomRange(min,max,min_inc=true,max_inc=true) { 
     let props = {};
@@ -6,6 +7,36 @@ function groomRange(min,max,min_inc=true,max_inc=true) {
     props[ max_inc ? 'maximum' : 'exclusiveMaximum' ] = max;
     return props;
 }
+
+function process_nbrItems(obj) {
+    let nbrItems = obj.nbrItems;
+
+    return u.omit( 'nbrItems' )(
+        u({
+            minItems: Array.isArray(nbrItems) ? nbrItems[0] : nbrItems,
+            maxItems: Array.isArray(nbrItems) ? nbrItems[1] : nbrItems,
+        })(obj)
+    );
+}
+
+function process_range(obj) {
+    return u.omit( 'range' )( 
+        u( groomRange( ...(obj.range) )  )( obj )
+    );
+}
+
+const transformations = [
+    { keyword: 'nbrItems', processor: process_nbrItems },
+    { keyword: 'range',    processor: process_range    },
+];
+
+function procress_transformations(obj) {
+    return transformations.reduce( (obj,t) => 
+        obj.hasOwnProperty(t.keyword) ? t.processor(obj) : obj
+    , obj );
+}
+
+
 
 export default
 function sh_json_schema(obj={}) {
@@ -17,45 +48,36 @@ function sh_json_schema(obj={}) {
 
     [ '$ref', 'type' ].forEach( field => {
         if( /!$/.test( obj[field] ) ) {
-            obj.required = true;
-            obj[field] = obj[field].replace( /!$/, '' );
+            obj = u({
+                required: true,
+                [field]: v => v.replace( /!$/, '' )
+            })(obj);
         }
     });
 
-    if( obj.hasOwnProperty('object') ) {
-        obj.type = 'object';
-        obj.properties = obj.object;
-        delete obj.object;
-    }
+    obj = u.omit( 'object' )( 
+        u.if( obj.hasOwnProperty('object'), {
+            type: 'object',
+            properties: obj.object,
+        })(obj));
 
-    [ 'definitions' ]
-        .filter( k => obj.hasOwnProperty(k) )
-        .forEach( keyword => {
-            obj[keyword] = _.mapValues( obj[keyword], v => sh_json_schema(v) )
-    } );
+    obj = u.if( obj.hasOwnProperty('definitions'), {
+        definitions: u.map( sh_json_schema )
+    })(obj);
 
-    [ 'anyOf', 'allOf', 'oneOf' ]
-        .filter( k => obj.hasOwnProperty(k) )
-        .forEach( keyword => {
-            obj[keyword] = obj[keyword].map( v => sh_json_schema(v) )
-    } );
+    obj = u( _.fromPairs( 
+        [ 'anyOf', 'allOf', 'oneOf' ].map( k => 
+            [ k, u.if( _.identity, u.map(sh_json_schema) ) ] 
+        )
+    ))(obj);
 
-    [ 'not' ]
-        .filter( k => obj.hasOwnProperty(k) )
-        .forEach( keyword => {
-            obj[keyword] = sh_json_schema(obj[keyword])
-    } );
+    obj = u.if( o => o.not, { not: sh_json_schema }, obj );
 
     if( obj.hasOwnProperty('array') ) {
-        obj.type = 'array';
-        obj.items = obj.array;
-        delete obj.array;
+        obj = u.omit( 'array', u( { type: 'array', items: obj.array }, obj ) );
     }
 
-    if( obj.hasOwnProperty('properties') ) {
-        obj.properties = _.mapValues(obj.properties,
-                v => sh_json_schema(v) );
-    }
+    obj = u.if( o => o.properties, { properties: u.map( sh_json_schema ) } )( obj );
 
     if( obj.hasOwnProperty('properties') ) {
         let required = obj.required || [];
@@ -65,30 +87,17 @@ function sh_json_schema(obj={}) {
             )
         );
 
-        obj.properties = _.mapValues(
-            obj.properties,
-            v => _.omit( v, 'required' )
-        );
+        obj = u({ properties: u.map( u.omit( 'required' ) ) })(obj);
 
-        if( required.length > 0 ) {
-            required.sort();
-            obj.required = required;
-        }
+        required.sort();
+        obj = u.if(required.length, { required })(obj);
     }
 
-    if( obj.hasOwnProperty('items') ) {
-        if( Array.isArray( obj.items ) ) {
-            obj.items = obj.items.map( sh_json_schema );
-        }
-        else {
-            obj.items = sh_json_schema( obj.items );
-        }
-    }
+    obj = u.if( o => o.items, {
+        items: items => Array.isArray(items) ? items.map( sh_json_schema ) : sh_json_schema(items)
+    } )(obj);
 
-    if( obj.hasOwnProperty('range') ) {
-        _.merge( obj, groomRange(...(obj.range) ) );
-        delete obj.range;
-    }
+    obj = procress_transformations(obj);
 
     return obj;
 }

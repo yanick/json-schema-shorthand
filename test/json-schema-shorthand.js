@@ -121,3 +121,18 @@ tap.test( 'range', t => {
 
     t.end();
 });
+
+tap.test( 'nbrItems', t => {
+
+    t.shorthand( 
+        { type: 'array', nbrItems: [ 5, 8 ] },
+        { type: 'array', minItems: 5, maxItems: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'array', nbrItems: 9 },
+        { type: 'array', minItems: 9, maxItems: 9 }
+    );
+
+    t.end();
+});
