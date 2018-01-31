@@ -28,7 +28,7 @@ const process_range = process_if_has( 'range' )( obj =>
 //  expand the shorthand content of `items`
 const expand_items = u({
     items: u.if( _.identity, 
-        items => Array.isArray(items) ? items.map( sh_json_schema ) : sh_json_schema(items)
+        items => Array.isArray(items) ? items.map( shorthand ) : shorthand(items)
     )
 });
 
@@ -52,10 +52,10 @@ const process_array = obj => u.if( obj.array,
     { type: 'array', items: obj.array }
 )( u.omit( 'array', obj ) );
 
-const map_shorthand = u.if( _.identity, u.map(sh_json_schema) );
+const map_shorthand = u.if( _.identity, u.map(shorthand) );
 
 const expand_shorthands = u({
-    not:         u.if( _.identity, sh_json_schema ),
+    not:         u.if( _.identity, shorthand ),
     definitions: map_shorthand,
     properties:  map_shorthand,
     anyOf:       map_shorthand,
@@ -64,7 +64,7 @@ const expand_shorthands = u({
 });
 
 export default
-function sh_json_schema(obj={}) {
+function shorthand(obj={}) {
     if( typeof obj === 'string' ) {
         obj = obj[0] === '$' ? { '$ref': obj.slice(1) }
             : obj[0] === '#' ? { '$ref': obj }
@@ -98,18 +98,18 @@ function sh_json_schema(obj={}) {
     return obj;
 }
 
-export const number  = (options) => sh_json_schema({ type: 'number', ...options });
-export const integer = (options) => sh_json_schema({ type: 'integer', ...options });
-export const string  = (options) => sh_json_schema({ type: 'string', ...options });
+export const number  = (options) => shorthand({ type: 'number', ...options });
+export const integer = (options) => shorthand({ type: 'integer', ...options });
+export const string  = (options) => shorthand({ type: 'string', ...options });
 
 export const array  = (items,options={}) => 
-sh_json_schema( u({
+shorthand( u({
     type: 'array',
     items: u.if(items,items),
 })(options) );
 
 export const object  = (properties,options={}) => 
-sh_json_schema( u({
+shorthand( u({
     type: 'object',
     properties: u.if(properties,properties),
 })(options) );
