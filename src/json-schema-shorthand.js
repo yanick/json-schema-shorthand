@@ -2,15 +2,16 @@ import _ from 'lodash';
 import u from 'updeep';
 
 function groomRange(min,max,min_inc=true,max_inc=true) { 
-    let props = {};
-    props[ min_inc ? 'minimum' : 'exclusiveMinimum' ] = min;
-    props[ max_inc ? 'maximum' : 'exclusiveMaximum' ] = max;
-    return props;
+    return {
+        [ min_inc ? 'minimum' : 'exclusiveMinimum' ] : min,
+        [ max_inc ? 'maximum' : 'exclusiveMaximum' ] : max,
+    };
 }
 
-function process_nbrItems(obj) {
-    if( ! obj.hasOwnProperty('nbrItems') ) return obj;
+const process_if_has = prop => f => obj =>
+    obj.hasOwnProperty(prop) ? f(obj) : obj;
 
+const process_nbrItems = process_if_has('nbrItems')( obj => {
     let nbrItems = obj.nbrItems;
     let is_array = Array.isArray(nbrItems);
 
@@ -18,14 +19,11 @@ function process_nbrItems(obj) {
         minItems: is_array ? nbrItems[0] : nbrItems,
         maxItems: is_array ? nbrItems[1] : nbrItems,
     }, u.omit('nbrItems')(obj) );
-}
+});
 
-function process_range(obj) {
-    if( !obj.hasOwnProperty('range') ) return obj;
-    return u.omit( 'range' )( 
-        u( groomRange( ...(obj.range) )  )( obj )
-    );
-}
+const process_range = process_if_has( 'range' )( obj =>
+    u.omit( 'range', u( groomRange( ...(obj.range) ), obj ) )
+);
 
 //  expand the shorthand content of `items`
 const expand_items = u({
@@ -50,18 +48,16 @@ function groom_required_properties(obj) {
     })(obj);
 }
 
-const expand_properties = u.if( o => o.properties, { properties: u.map( sh_json_schema ) } );
-
-const process_array = obj => u.if(
-    obj.array,
+const process_array = obj => u.if( obj.array,
     { type: 'array', items: obj.array }
 )( u.omit( 'array', obj ) );
 
 const map_shorthand = u.if( _.identity, u.map(sh_json_schema) );
 
-const expand_not_and_definitions_and_composites = u({
+const expand_shorthands = u({
     not:         u.if( _.identity, sh_json_schema ),
     definitions: map_shorthand,
+    properties:  map_shorthand,
     anyOf:       map_shorthand,
     allOf:       map_shorthand,
     oneOf:       map_shorthand,
@@ -91,9 +87,8 @@ function sh_json_schema(obj={}) {
         })(obj));
 
     obj = _.flow([ 
-        expand_not_and_definitions_and_composites,
+        expand_shorthands,
         process_array,
-        expand_properties,
         groom_required_properties,
         expand_items,
         process_nbrItems,
@@ -102,3 +97,19 @@ function sh_json_schema(obj={}) {
 
     return obj;
 }
+
+export const number  = (options) => sh_json_schema({ type: 'number', ...options });
+export const integer = (options) => sh_json_schema({ type: 'integer', ...options });
+export const string  = (options) => sh_json_schema({ type: 'string', ...options });
+
+export const array  = (items,options={}) => 
+sh_json_schema( u({
+    type: 'array',
+    items: u.if(items,items),
+})(options) );
+
+export const object  = (properties,options={}) => 
+sh_json_schema( u({
+    type: 'object',
+    properties: u.if(properties,properties),
+})(options) );

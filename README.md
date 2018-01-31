@@ -15,19 +15,14 @@ blindly. If you  hit such a case, raise a ticket and I'll refine the process.
 
 ## Typical use
 
-    var shorthand = require('json-schema-shorthand').default;
+    import shorthand, { object, array } from 'json-schema-shorthand';
 
-    var abbrev = {
-        object: {
-            foo: 'number',
-            bar: {
-                array: 'string'
-            },
-        }
-    };
+    let schema = object({
+        foo: 'number',
+        bar: array('string'),
+    });
 
-    var expanded = shorthand( abbrev );
-    // expanded === {
+    // schema === {
     //    type: 'object',
     //    properties: {
     //        foo: { type: 'number' },
@@ -35,7 +30,58 @@ blindly. If you  hit such a case, raise a ticket and I'll refine the process.
     //    }
     // }
 
+## Functions
+
+### `shorthand( schema )`
+
+The default export of `json-schema-shorthand`. Takes in a data structure
+and expands any shorthand (see next section) found in it. Note that because
+`json-schema-shorthand` is using
+[updeep](https://github.com/substantial/updeep) internally, 
+the returned schema is
+[frozen](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
+
+### `number( options )`
+
+    let schema = number({ maximum: 5 });
+    // => { type: 'number', maximum: 5 }
+
+Expands into a number type. The options are also expanded via `shorthand()`
+
+### `integer( options )`
+
+    let schema = integer({ maximum: 5 });
+    // => { type: 'integer', maximum: 5 }
+
+Expands into a integer type. The options are also expanded via `shorthand()`
+
+### `string( options )`
+
+    let schema = string({ maxLength: 5 });
+    // => { type: 'string', maxLength: 5 }
+
+Expands into a string type. The options are also expanded via `shorthand()`
+
+### `array( items, options )`
+
+    let schema = array('number', { maxItems: 5 });
+    // => { type: 'array', items: { type: 'number' }, maxItems: 5 }
+
+Expands into an array type. Both `items` and `options` are expanded via `shorthand()`
+
+### `object( properties, options )`
+
+    let schema = object({ foo: 'string!' }, { description: "yadah" });
+    // => { type: 'object', 
+    //      properties: { foo: { type: 'string' } }, 
+    //      required: [ 'foo' ],
+    //      description: "yadah" }
+
+Expands into an array type. Both `properties` and `options` are expanded via `shorthand()`
+
+
 ## Shorthands
+
 
 ### Types as string
 

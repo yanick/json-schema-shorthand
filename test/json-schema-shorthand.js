@@ -1,5 +1,6 @@
+import tap from 'tap';
+
 import shorthand from '../src/json-schema-shorthand';
-const tap = require('tap');
 
 tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, message, extra) {
     return this.same( shorthand(observed), expected,  message, extra );

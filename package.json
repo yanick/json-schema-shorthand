@@ -29,7 +29,8 @@
   "homepage": "https://github.com/yanick/json-schema-shorthand#readme",
   "dependencies": {
     "babel-tap": "^5.0.0",
-    "lodash": "^4.14.1"
+    "lodash": "^4.14.1",
+    "updeep": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
