@@ -79,6 +79,50 @@ Expands into an array type. Both `items` and `options` are expanded via `shortha
 
 Expands into an array type. Both `properties` and `options` are expanded via `shorthand()`
 
+### `add_definition( name, schema )`
+
+If using Babel and
+[babel-plugin-transform-function-bind](https://babeljs.io/docs/plugins/transform-function-bind/):
+
+    import { add_definition, object } from 'json-schema-shorthand';
+
+    let definitions = {};
+    let thingy = definitions::add_definition( 'thingy', 'string' );
+    // thingy === { '$ref': '#/definitions/thingy' }
+
+    let schema = object({
+        foo: thingy
+    }, {
+        definitions,
+    });
+    // ==> {
+    //    definitions: { thingy: { type: 'string' } },
+    //    type: 'object',
+    //    properties: {
+    //        foo: { '$ref': '#/definitions/thingy },
+    //    }
+    //}
+
+Using good ol' `bind()`:
+
+    import { add_definition, object } from 'json-schema-shorthand';
+
+    let definitions = {};
+    const add_def = add_definition.bind(definitions);
+
+    let thingy = add_def( 'thingy', 'string' );
+
+    let schema = object({
+        foo: thingy
+    }, {
+        definitions,
+    });
+
+In both versions, `add_definition`  will add the provided
+definition to its context (with all shorthands expanded, natch) and
+return its related schema pointer so that, if assigned to a variable,
+it can be used as a type shortcut.
+
 
 ## Shorthands
 

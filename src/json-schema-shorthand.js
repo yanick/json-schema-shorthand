@@ -113,3 +113,9 @@ shorthand( u({
     type: 'object',
     properties: u.if(properties,properties),
 })(options) );
+
+
+export function add_definition( name, schema ) {
+    this[ name ] = shorthand(schema);
+    return { '$ref': '#/definitions/' + name }
+}

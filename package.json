@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/yanick/json-schema-shorthand#readme",
   "dependencies": {
+    "babel-plugin-transform-function-bind": "^6.22.0",
     "babel-tap": "^5.0.0",
     "lodash": "^4.14.1",
     "updeep": "^1.0.0"

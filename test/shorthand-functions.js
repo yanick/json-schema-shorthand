@@ -6,10 +6,6 @@ import {
     number, integer, string 
 } from '../src/json-schema-shorthand';
 
-tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, message, extra) {
-    return this.same( shorthand(observed), expected,  message, extra );
-});
-
 tap.test( 'number', t => {
     t.same(
         number(),
