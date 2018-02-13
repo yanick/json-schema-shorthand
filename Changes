@@ -5,6 +5,9 @@
 ## Improvements
     * New shortcut: '$foo' expands to be `$ref: foo`.
     * New 'range' shortcut.
+    * New shortcut functions for types `object`, `array`, `number`, 
+        `integer`, and `string`.
+    * Add `add_definition` helper function.
 
 ### Bug Fixes
     * `shorthand()` deals gracefully with `null` argument.
