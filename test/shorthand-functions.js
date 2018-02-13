@@ -117,3 +117,14 @@ tap.test( 'object', t => {
 
     t.end();
 });
+
+tap.test( 'with description', t => {
+
+    t.match(
+        object( null, "foo", { additionalProperties: true } ),
+        { description: "foo", additionalProperties: true },
+        "turn the string into the desc"
+    );
+
+    t.end();
+});

@@ -98,24 +98,32 @@ function shorthand(obj={}) {
     return obj;
 }
 
-export const number  = (options) => shorthand({ type: 'number', ...options });
-export const integer = (options) => shorthand({ type: 'integer', ...options });
-export const string  = (options) => shorthand({ type: 'string', ...options });
+function merge_defs( ...defs ) {
+    return shorthand( 
+        defs.map( d => typeof d === 'string' ? { description: d } : d )
+            .reduce( ( merged, addition ) => u(addition)(merged), {} )
+    );
+}
 
-export const array  = (items,options={}) => 
-shorthand( u({
-    type: 'array',
-    items: u.if(items,items),
-})(options) );
+const simple_def = type => (...options) => merge_defs({ type }, ...options);
 
-export const object  = (properties,options={}) => 
-shorthand( u({
-    type: 'object',
-    properties: u.if(properties,properties),
-})(options) );
+export const number  = simple_def('number');
+export const integer = simple_def('integer');
+export const string  = simple_def('string');
+
+export const array  = (items=null,...options) => merge_defs(
+    { type: 'array', items: u.if(items,items), }, ...options
+);
+
+export const object = (properties=null,...options) => merge_defs(
+    { 
+        type: "object", 
+        properties: u.if(properties,properties),
+    }, ...options
+);
 
 
-export function add_definition( name, schema ) {
-    this[ name ] = shorthand(schema);
+export function add_definition( name, ...schemas ) {
+    this[ name ] = merge_defs(...schemas);
     return { '$ref': '#/definitions/' + name }
 }
