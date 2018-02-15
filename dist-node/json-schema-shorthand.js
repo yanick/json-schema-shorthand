@@ -4,9 +4,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.object = exports.array = exports.string = exports.integer = exports.number = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 exports.default = shorthand;
 exports.add_definition = add_definition;
 
@@ -118,33 +115,58 @@ function shorthand() {
     return obj;
 }
 
-var number = exports.number = function number(options) {
-    return shorthand(_extends({ type: 'number' }, options));
-};
-var integer = exports.integer = function integer(options) {
-    return shorthand(_extends({ type: 'integer' }, options));
-};
-var string = exports.string = function string(options) {
-    return shorthand(_extends({ type: 'string' }, options));
+function merge_defs() {
+    for (var _len = arguments.length, defs = Array(_len), _key = 0; _key < _len; _key++) {
+        defs[_key] = arguments[_key];
+    }
+
+    return shorthand(defs.map(function (d) {
+        return typeof d === 'string' ? { description: d } : d;
+    }).reduce(function (merged, addition) {
+        return (0, _updeep2.default)(addition)(merged);
+    }, {}));
+}
+
+var simple_def = function simple_def(type) {
+    return function () {
+        for (var _len2 = arguments.length, options = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            options[_key2] = arguments[_key2];
+        }
+
+        return merge_defs.apply(undefined, [{ type: type }].concat(options));
+    };
 };
 
-var array = exports.array = function array(items) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    return shorthand((0, _updeep2.default)({
-        type: 'array',
-        items: _updeep2.default.if(items, items)
-    })(options));
+var number = exports.number = simple_def('number');
+var integer = exports.integer = simple_def('integer');
+var string = exports.string = simple_def('string');
+
+var array = exports.array = function array() {
+    for (var _len3 = arguments.length, options = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        options[_key3 - 1] = arguments[_key3];
+    }
+
+    var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    return merge_defs.apply(undefined, [{ type: 'array', items: _updeep2.default.if(items, items) }].concat(options));
 };
 
-var object = exports.object = function object(properties) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    return shorthand((0, _updeep2.default)({
-        type: 'object',
+var object = exports.object = function object() {
+    for (var _len4 = arguments.length, options = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+        options[_key4 - 1] = arguments[_key4];
+    }
+
+    var properties = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    return merge_defs.apply(undefined, [{
+        type: "object",
         properties: _updeep2.default.if(properties, properties)
-    })(options));
+    }].concat(options));
 };
 
-function add_definition(name, schema) {
-    this[name] = shorthand(schema);
+function add_definition(name) {
+    for (var _len5 = arguments.length, schemas = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+        schemas[_key5 - 1] = arguments[_key5];
+    }
+
+    this[name] = merge_defs.apply(undefined, schemas);
     return { '$ref': '#/definitions/' + name };
 }
