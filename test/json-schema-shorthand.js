@@ -1,5 +1,6 @@
+import tap from 'tap';
+
 import shorthand from '../src/json-schema-shorthand';
-const tap = require('tap');
 
 tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, message, extra) {
     return this.same( shorthand(observed), expected,  message, extra );
@@ -90,6 +91,48 @@ tap.test( 'array', t => {
         { type: 'array', items: [ 'number' ] },
         { type: 'array', items: [ { type: 'number' } ] },
         'expands items' 
+    );
+
+    t.end();
+});
+
+
+tap.test( 'range', t => {
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, true, false ] },
+        { type: 'number', minimum: 5, exclusiveMaximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8 ] },
+        { type: 'number', minimum: 5, maximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, true ] },
+        { type: 'number', minimum: 5, maximum: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'number', range: [ 5, 8, false ] },
+        { type: 'number', exclusiveMinimum: 5, maximum: 8 }
+    );
+
+
+    t.end();
+});
+
+tap.test( 'nbrItems', t => {
+
+    t.shorthand( 
+        { type: 'array', nbrItems: [ 5, 8 ] },
+        { type: 'array', minItems: 5, maxItems: 8 }
+    );
+
+    t.shorthand( 
+        { type: 'array', nbrItems: 9 },
+        { type: 'array', minItems: 9, maxItems: 9 }
     );
 
     t.end();
