@@ -1,6 +1,6 @@
 # Revision history for json-schema-shorthand
 
-## NEXT
+## v0.3.0 2018-02-14
 
 ## Improvements
     * New shortcut: '$foo' expands to be `$ref: foo`.
