@@ -1,0 +1,13 @@
+version: 2
+
+tasks:
+    test:
+        cmds:
+            - jest src 
+    clean:
+        cmds:
+            - rm dist/* -fr
+
+    build:
+        cmds:
+            - babel --ignore '**/*.test.js' --out-dir dist src/

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import fp from 'lodash/fp';
 import u from 'updeep';
 
 function groomRange(min,max,min_inc=true,max_inc=true) { 
@@ -8,28 +9,26 @@ function groomRange(min,max,min_inc=true,max_inc=true) {
     };
 }
 
-const process_if_has = prop => f => obj =>
-    obj.hasOwnProperty(prop) ? f(obj) : obj;
+const process_if_has = fp.curry( function(prop,update,obj) {
+    return u.if( fp.has(prop), update, obj );
+} );
 
-const process_nbrItems = process_if_has('nbrItems')( obj => {
-    let nbrItems = obj.nbrItems;
-    let is_array = Array.isArray(nbrItems);
+const process_nbrItems = process_if_has('nbrItems', obj => {
+    const { nbrItems } = obj;
+    const [ minItems, maxItems ] = Array.isArray(nbrItems) ? nbrItems : [
+        nbrItems, nbrItems
+    ];
 
-    return u({
-        minItems: is_array ? nbrItems[0] : nbrItems,
-        maxItems: is_array ? nbrItems[1] : nbrItems,
-    }, u.omit('nbrItems')(obj) );
+    return obj |> u({ minItems, maxItems }) |> u.omit('nbrItems')
 });
 
-const process_range = process_if_has( 'range' )( obj =>
-    u.omit( 'range', u( groomRange( ...(obj.range) ), obj ) )
+const process_range = process_if_has( 'range', 
+    obj => obj |> u( groomRange( ...(obj.range) ) ) |> u.omit(['range'])
 );
 
 //  expand the shorthand content of `items`
-const expand_items = u({
-    items: u.if( _.identity, 
-        items => Array.isArray(items) ? items.map( shorthand ) : shorthand(items)
-    )
+const expand_items = process_if_has('items', {
+    items: items => Array.isArray(items) ? items.map( shorthand ) : shorthand(items)
 });
 
 function groom_required_properties(obj) {
@@ -48,9 +47,17 @@ function groom_required_properties(obj) {
     })(obj);
 }
 
-const process_array = obj => u.if( obj.array,
-    { type: 'array', items: obj.array }
-)( u.omit( 'array', obj ) );
+const process_array = process_if_has('array', obj => obj |> u(({array: items}) => ({
+        type: 'array', items, 
+    })) |> u.omit([ 'array' ])
+);
+
+const process_object = process_if_has('object', 
+    fp.flow([
+        u( ({object: properties}) => ({ type: 'object', properties, })), 
+        u.omit([ 'object' ])
+    ])
+);
 
 const map_shorthand = u.if( _.identity, u.map(shorthand) );
 
@@ -80,22 +87,15 @@ function shorthand(obj={}) {
         }
     });
 
-    obj = u.omit( 'object' )( 
-        u.if( obj.hasOwnProperty('object'), {
-            type: 'object',
-            properties: obj.object,
-        })(obj));
 
-    obj = _.flow([ 
-        expand_shorthands,
-        process_array,
-        groom_required_properties,
-        expand_items,
-        process_nbrItems,
-        process_range,
-    ])( obj );
-
-    return obj;
+    return obj 
+        |> process_object
+        |> expand_shorthands
+        |> process_array
+        |> groom_required_properties
+        |> expand_items
+        |> process_nbrItems
+        |> process_range;
 }
 
 function merge_defs( ...defs ) {
