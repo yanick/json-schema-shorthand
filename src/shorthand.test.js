@@ -1,42 +1,43 @@
-import tap from 'tap';
+import _ from 'lodash';
 
-import shorthand from '../src/json-schema-shorthand';
+import shorthand from './index';
 
-tap.Test.prototype.addAssert('shorthand', 2, function(observed, expected, message, extra) {
-    return this.same( shorthand(observed), expected,  message, extra );
-});
+const shorthand_ok = ( received, expected, desc ) => {
+    if(!desc) desc = JSON.stringify(received);
+    test( desc, () => expect( shorthand( received ) ).toEqual(expected ) );
+};
 
-tap.test( 'shortcuts', t => {
+describe( 'shortcuts', () =>{
 
-    t.shorthand( undefined, {}, 'passing "undefined"' );
+    shorthand_ok( undefined, {}, 'passing "undefined"' );
 
-    t.shorthand( 'string', { type: 'string' }, 'type as string' );
+    shorthand_ok( 'string', { type: 'string' }, 'type as string' );
 
-    t.shorthand( { object: { foo: 'string' } },  
+    shorthand_ok( { object: { foo: 'string' } },  
         { type: 'object', properties: { foo: { type: 'string' } } },
         'object property'
     );
 
-    t.shorthand( { object: { foo: {}  } }, 
+    shorthand_ok( { object: { foo: {}  } }, 
         { type: 'object', properties: { foo: { } } },
         'expands objects' 
     );
 
-    t.shorthand(
+    shorthand_ok(
         { array: [ 'number' ] },
         { type: 'array', items: [ { type: 'number' } ] },
         'expands array');
 
-    t.shorthand(
+    shorthand_ok(
         { array: 'number' },
         { type: 'array', items:  { type: 'number' }  },
         'expands array');
 
-    t.shorthand( { properties: { foo: { required: true } } },
+    shorthand_ok( { properties: { foo: { required: true } } },
         { required: [ 'foo' ], properties: { foo: { } } },
         'expands required' );
 
-    t.shorthand( { properties: { foo: 'number!', bar: '#baz!' } },
+    shorthand_ok( { properties: { foo: 'number!', bar: '#baz!' } },
         {
             required: [ 'bar', 'foo' ], 
             properties: { 
@@ -54,86 +55,81 @@ tap.test( 'shortcuts', t => {
 
             expected[keyword] = [ { type: 'number' } ];
 
-            t.shorthand( short, expected );
+            shorthand_ok( short, expected );
     });
 
-    t.shorthand(
+    shorthand_ok(
         { 'definitions': { "foo": 'object' }},
         { definitions: { foo: { type: 'object' } } },
         'expands definitions'
     );
 
-    t.shorthand( 
+    shorthand_ok( 
         { 'not': 'object' },
         { not: { type: 'object' } },
         'expands not' 
     );
 
-    t.end();
 
 });
 
-tap.test( 'ref', t => {
-    t.shorthand( '#foo', { '$ref': '#foo' }, 'expands #ref' );
-    t.shorthand( '$http://foo', { '$ref': 'http://foo' }, 'expands $ref' );
+describe( 'ref', () =>{
+    shorthand_ok( '#foo', { '$ref': '#foo' }, 'expands #ref' );
+    shorthand_ok( '$http://foo', { '$ref': 'http://foo' }, 'expands $ref' );
 
-    t.end();
 });
 
-tap.test( 'array', t => {
-    t.shorthand( { 'array': 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+describe( 'array', () =>{
+    shorthand_ok( { 'array': 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
 
-    t.shorthand( { type: 'array', items: 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+    shorthand_ok( { type: 'array', items: 'number' }, { type: 'array', items: { type: 'number' } }, 'expands items' );
 
-    t.shorthand( { type: 'array', items: { type: 'number' } }, { type: 'array', items: { type: 'number' } }, 'expands items' );
+    shorthand_ok( { type: 'array', items: { type: 'number' } }, { type: 'array', items: { type: 'number' } }, 'expands items' );
 
-    t.shorthand(
+    shorthand_ok(
         { type: 'array', items: [ 'number' ] },
         { type: 'array', items: [ { type: 'number' } ] },
         'expands items' 
     );
 
-    t.end();
 });
 
 
-tap.test( 'range', t => {
+describe( 'range', () =>{
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'number', range: [ 5, 8, true, false ] },
         { type: 'number', minimum: 5, exclusiveMaximum: 8 }
     );
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'number', range: [ 5, 8 ] },
         { type: 'number', minimum: 5, maximum: 8 }
     );
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'number', range: [ 5, 8, true ] },
         { type: 'number', minimum: 5, maximum: 8 }
     );
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'number', range: [ 5, 8, false ] },
         { type: 'number', exclusiveMinimum: 5, maximum: 8 }
     );
 
 
-    t.end();
 });
 
-tap.test( 'nbrItems', t => {
+describe( 'nbrItems', () =>{
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'array', nbrItems: [ 5, 8 ] },
         { type: 'array', minItems: 5, maxItems: 8 }
     );
 
-    t.shorthand( 
+    shorthand_ok( 
         { type: 'array', nbrItems: 9 },
         { type: 'array', minItems: 9, maxItems: 9 }
     );
 
-    t.end();
 });

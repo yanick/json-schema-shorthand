@@ -1,130 +1,127 @@
-import tap from 'tap';
-
 import { 
     object,
     array,
     number, integer, string 
-} from '../src/json-schema-shorthand';
+} from './index';
 
-tap.test( 'number', t => {
-    t.same(
+const same = ( received, expected, desc ) => {
+    if(!desc) desc = JSON.stringify(received);
+
+    test( desc, () => expect(received).toEqual(expected) );
+};
+
+describe( 'number',  () => {
+    same(
         number(),
         { type: 'number' },
         'no argument'
     );
 
-    t.same(
+    same(
         number({ minimum: 3 }),
         { type: 'number', minimum: 3 },
         'arguments'
     );
 
-    t.same(
+    same(
         number({ range: [3,5] }),
         { type: 'number', minimum: 3, maximum: 5 },
         'shorthand arguments'
     );
 
-    t.end();
 });
 
-tap.test( 'string', t => {
-    t.same(
+describe( 'string',  () => {
+    same(
         string(),
         { type: 'string' },
         'no argument'
     );
 
-    t.same(
+    same(
         string({ minimum: 3 }),
         { type: 'string', minimum: 3 },
         'arguments'
     );
 
-    t.same(
+    same(
         string({ range: [3,5] }),
         { type: 'string', minimum: 3, maximum: 5 },
         'shorthand arguments'
     );
 
-    t.end();
 });
 
-tap.test( 'integer', t => {
-    t.same(
+describe( 'integer',  () => {
+    same(
         integer(),
         { type: 'integer' },
         'no argument'
     );
 
-    t.same(
+    same(
         integer({ minimum: 3 }),
         { type: 'integer', minimum: 3 },
         'arguments'
     );
 
-    t.same(
+    same(
         integer({ range: [3,5] }),
         { type: 'integer', minimum: 3, maximum: 5 },
         'shorthand arguments'
     );
 
-    t.end();
 });
 
-tap.test( 'array', t => {
-    t.same(
+describe( 'array',  () => {
+    same(
         array(),
         { type: 'array' },
         'no argument'
     );
 
-    t.same(
+    same(
         array('string'),
         { type: 'array', items: { type: 'string' } },
         'w/ items'
     );
 
-    t.same(
+    same(
         array('string', { minItems: 3 }),
         { type: 'array', items: { type: 'string' }, minItems: 3 },
         'w/ items and options'
     );
 
 
-    t.end();
 });
 
-tap.test( 'object', t => {
-    t.same(
+describe( 'object',  () => {
+    same(
         object(),
         { type: 'object' },
         'no argument'
     );
 
-    t.same(
+    same(
         object({ foo: 'string' }),
         { type: 'object', properties: { foo: { type: 'string' } } },
         'w/ properties'
     );
 
-    t.same(
+    same(
         object({ foo: 'string' }, { maxProperties: 3 }),
         { type: 'object', properties: { foo: { type: 'string' } }, maxProperties: 3 },
         'w/ props and options'
     );
 
 
-    t.end();
 });
 
-tap.test( 'with description', t => {
+describe( 'with description',  () => {
 
-    t.match(
-        object( null, "foo", { additionalProperties: true } ),
-        { description: "foo", additionalProperties: true },
-        "turn the string into the desc"
-    );
+    test( 'turn the string into desc', () => {
+        expect(object( null, "foo", { additionalProperties: true } ))
+            .toMatchObject( { description: "foo", additionalProperties: true });
+    });
 
-    t.end();
 });
