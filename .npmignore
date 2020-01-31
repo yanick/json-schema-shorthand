@@ -2,4 +2,8 @@ node_modules
 package-lock.json
 shrinkwrap.yaml
 dist
+.prettierignore
+src/*
+babel.config.js
 json-*.tgz
+.travis.yml
