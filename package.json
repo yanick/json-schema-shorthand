@@ -1,6 +1,6 @@
 {
   "name": "json-schema-shorthand",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Shortcuts for json schema definitions",
   "main": "dist/index.js",
   "scripts": {
@@ -35,8 +35,15 @@
     "regenerator-runtime": "^0.13.3"
   },
   "release": {
+    "repositoryUrl": "ssh://git@github.com/yanick/json-schema-shorthand.git",
     "branches": [
-      "releases"
+      "releases",
+      "master"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm"
     ]
   }
 }
