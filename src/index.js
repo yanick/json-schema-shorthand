@@ -78,26 +78,23 @@ const expand_shorthands = u({
   oneOf: map_shorthand
 });
 
-export default function shorthand(obj = {}) {
-  if (typeof obj === "string") {
-    obj =
-      obj[0] === "$"
-        ? { $ref: obj.slice(1) }
-        : obj[0] === "#"
-        ? { $ref: obj }
-        : { type: obj };
-  }
+const expandString = u.if(
+  obj => typeof obj === "string",
+  obj =>
+    obj[0] === "$"
+      ? { $ref: obj.slice(1) }
+      : { [obj[0] === "#" ? "$ref" : "type"]: obj }
+);
 
-  ["$ref", "type"].forEach(field => {
-    if (/!$/.test(obj[field])) {
-      obj = u({
+export default function shorthand(obj = {}) {
+  return fp.flow([
+    expandString,
+    ...["$ref", "type"].map(field =>
+      u.if(obj => /!$/.test(obj[field]), {
         required: true,
         [field]: v => v.replace(/!$/, "")
-      })(obj);
-    }
-  });
-
-  return fp.flow([
+      })
+    ),
     process_object,
     expand_shorthands,
     process_array,
