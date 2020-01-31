@@ -1,4 +1,13 @@
-# Revision history for json-schema-shorthand
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.3.2](https://github.com/yanick/json-schema-shorthand/compare/v0.3.1...v0.3.2) (2020-01-31)
+
+
+### Bug Fixes
+
+* remove shrinkwrap.yaml from repo ([baf6ca5](https://github.com/yanick/json-schema-shorthand/commit/baf6ca5c27f9f7723afa48796da0627160579839))
 
 ## 0.3.1 (https://github.com/yanick/json-schema-shorthand/compare/v0.3.0...v0.3.1) (2020-01-31)
 

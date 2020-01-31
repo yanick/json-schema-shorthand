@@ -1,6 +1,6 @@
 {
   "name": "json-schema-shorthand",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Shortcuts for json schema definitions",
   "main": "dist/index.js",
   "scripts": {
