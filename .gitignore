@@ -3,3 +3,4 @@ package-lock.json
 shrinkwrap.yaml
 dist
 json-*.tgz
+coverage
