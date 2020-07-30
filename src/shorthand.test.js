@@ -1,7 +1,5 @@
 import tap from "tap";
 
-import _ from "lodash";
-
 import shorthand from "./index";
 
 tap.Test.prototype.addAssert("shorthand_ok", 2, function(

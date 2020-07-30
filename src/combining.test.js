@@ -1,7 +1,5 @@
 import tap from "tap";
 
-import _ from "lodash";
-
 import * as jssh from "./index";
 
 for (let c of ["allOf", "anyOf", "oneOf"]) {
