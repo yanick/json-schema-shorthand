@@ -5,10 +5,6 @@ but its schema definition can be a little bit more long-winded
 than necessary. This module allows to use a few shortcuts that
 will be expanded into their canonical form.
 
-**WARNING**: the module is still very young, and there are plenty of
-properties this module should expand and does not. So don't trust it
-blindly. If you  hit such a case, raise a ticket and I'll refine the process.
-
 ## To install
 
     npm install json-schema-shorthand
