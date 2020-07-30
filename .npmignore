@@ -8,3 +8,4 @@ babel.config.js
 json-*.tgz
 .travis.yml
 coverage
+.nyc_output
