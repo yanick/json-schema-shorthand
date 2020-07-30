@@ -6,7 +6,13 @@
   "scripts": {
     "test": "tap src/*.test.js",
     "clean": "rm -fr dist/*",
-    "build": "babel --ignore '**/*.test.js' --out-dir dist src/"
+    "build": "babel --ignore '**/*.test.js' --out-dir dist src/",
+    "lint": "npm-run-all --parallel \"lint:prettier -- {@}\" \"lint:eslint -- {@}\" --",
+    "lint:eslint": "eslint src/**.js",
+    "lint:eslint:fix": "eslint src/**.js --fix",
+    "lint:fix": "npm-run-all \"lint:eslint:fix -- {@}\" \"lint:prettier:fix -- {@}\" --",
+    "lint:prettier": "prettier -c src/**.js",
+    "lint:prettier:fix": "prettier src/**.js --write"
   },
   "repository": "git+https://github.com/yanick/json-schema-shorthand.git",
   "keywords": [
@@ -27,7 +33,14 @@
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
-    "tap": "^14.10.8"
+    "npm-run-all": "^4.1.5",
+    "tap": "^14.10.8",
+    "eslint": "7.5.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-babel": "5.3.1",
+    "eslint-plugin-lodash": "^7.1.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-you-dont-need-lodash-underscore": "^6.10.0"
   },
   "release": {
     "repositoryUrl": "ssh://git@github.com/yanick/json-schema-shorthand.git",
@@ -40,5 +53,31 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/npm"
     ]
+  },
+  "eslintConfig": {
+    "env": {
+      "amd": true,
+      "es6": true,
+      "node": true
+    },
+    "extends": [
+      "prettier",
+      "eslint:recommended",
+      "plugin:you-dont-need-lodash-underscore/compatible",
+      "plugin:lodash/recommended"
+    ],
+    "ignorePatterns": [
+      "src/node_modules"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "modules": true
+      },
+      "ecmaVersion": "2020",
+      "sourceType": "module"
+    },
+    "rules": {
+      "lodash/prefer-lodash-method": "off"
+    }
   }
 }

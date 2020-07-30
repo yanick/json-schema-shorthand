@@ -1,6 +1,8 @@
 import fp from "lodash/fp";
 import u from "updeep";
 
+import isString from "lodash/isString";
+
 function groomRange(min, max, min_inc = true, max_inc = true) {
   return {
     [min_inc ? "minimum" : "exclusiveMinimum"]: min,
@@ -33,7 +35,7 @@ const expand_items = process_if_has("items", {
 });
 
 function groom_required_properties(obj) {
-  if (!obj.hasOwnProperty("properties")) return obj;
+  if (!obj.properties) return obj;
 
   let required = obj.required || [];
 
@@ -78,12 +80,10 @@ const expand_shorthands = u({
   oneOf: map_shorthand
 });
 
-const expandString = u.if(
-  obj => typeof obj === "string",
-  obj =>
-    obj[0] === "$"
-      ? { $ref: obj.slice(1) }
-      : { [obj[0] === "#" ? "$ref" : "type"]: obj }
+const expandString = u.if(isString, obj =>
+  obj[0] === "$"
+    ? { $ref: obj.slice(1) }
+    : { [obj[0] === "#" ? "$ref" : "type"]: obj }
 );
 
 export default function shorthand(obj = {}) {
@@ -108,7 +108,7 @@ export default function shorthand(obj = {}) {
 function merge_defs(...defs) {
   return shorthand(
     defs
-      .map(d => (typeof d === "string" ? { description: d } : d))
+      .map(d => (isString(d) ? { description: d } : d))
       .reduce((merged, addition) => u(addition)(merged), {})
   );
 }
@@ -132,14 +132,14 @@ export const object = (properties = null, ...options) =>
   );
 
 const combinatory = key => (...parts) => ({
-    [key]: map_shorthand(parts)
+  [key]: map_shorthand(parts)
 });
 
-export const allOf = combinatory('allOf');
-export const anyOf = combinatory('anyOf');
-export const oneOf = combinatory('oneOf');
+export const allOf = combinatory("allOf");
+export const anyOf = combinatory("anyOf");
+export const oneOf = combinatory("oneOf");
 export const not = inner => ({
-    not: shorthand(inner)
+  not: shorthand(inner)
 });
 
 export function add_definition(name, ...schemas) {
