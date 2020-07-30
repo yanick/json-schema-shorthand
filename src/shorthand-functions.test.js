@@ -2,7 +2,7 @@ import tap from "tap";
 
 import { object, array, number, integer, string } from "./index";
 
-tap.test("number", async (t) => {
+tap.test("number", async t => {
   t.same(number(), { type: "number" }, "no argument");
 
   t.same(number({ minimum: 3 }), { type: "number", minimum: 3 }, "arguments");
@@ -14,7 +14,7 @@ tap.test("number", async (t) => {
   );
 });
 
-tap.test("string", async (t) => {
+tap.test("string", async t => {
   t.same(string(), { type: "string" }, "no argument");
 
   t.same(string({ minimum: 3 }), { type: "string", minimum: 3 }, "arguments");
@@ -26,14 +26,10 @@ tap.test("string", async (t) => {
   );
 });
 
-tap.test("integer", async (t) => {
+tap.test("integer", async t => {
   t.same(integer(), { type: "integer" }, "no argument");
 
-  t.same(
-    integer({ minimum: 3 }),
-    { type: "integer", minimum: 3 },
-    "arguments"
-  );
+  t.same(integer({ minimum: 3 }), { type: "integer", minimum: 3 }, "arguments");
 
   t.same(
     integer({ range: [3, 5] }),
@@ -42,7 +38,7 @@ tap.test("integer", async (t) => {
   );
 });
 
-tap.test("array", async (t) => {
+tap.test("array", async t => {
   t.same(array(), { type: "array" }, "no argument");
 
   t.same(
@@ -58,7 +54,7 @@ tap.test("array", async (t) => {
   );
 });
 
-tap.test("object", async (t) => {
+tap.test("object", async t => {
   t.same(object(), { type: "object" }, "no argument");
 
   t.same(
@@ -72,13 +68,13 @@ tap.test("object", async (t) => {
     {
       type: "object",
       properties: { foo: { type: "string" } },
-      maxProperties: 3,
+      maxProperties: 3
     },
     "w/ props and options"
   );
 });
 
-tap.test("with description", async (t) => {
+tap.test("with description", async t => {
   t.match(
     object(null, "foo", { additionalProperties: true }),
     { description: "foo", additionalProperties: true },

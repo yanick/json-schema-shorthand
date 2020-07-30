@@ -132,14 +132,14 @@ export const object = (properties = null, ...options) =>
   );
 
 const combinatory = key => (...parts) => ({
-    [key]: map_shorthand(parts)
+  [key]: map_shorthand(parts)
 });
 
-export const allOf = combinatory('allOf');
-export const anyOf = combinatory('anyOf');
-export const oneOf = combinatory('oneOf');
+export const allOf = combinatory("allOf");
+export const anyOf = combinatory("anyOf");
+export const oneOf = combinatory("oneOf");
 export const not = inner => ({
-    not: shorthand(inner)
+  not: shorthand(inner)
 });
 
 export function add_definition(name, ...schemas) {
