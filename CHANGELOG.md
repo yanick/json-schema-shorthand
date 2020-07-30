@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/yanick/json-schema-shorthand/compare/v0.3.2...v1.0.0) (2020-07-30)
+
+
+### Features
+
+* add allOf, anyOf, oneOf, not shorthands ([b47ee27](https://github.com/yanick/json-schema-shorthand/commit/b47ee27671a4861756a74f4ad6b0dc10d10f1a3c))
+
 ### [0.3.2](https://github.com/yanick/json-schema-shorthand/compare/v0.3.1...v0.3.2) (2020-01-31)
 
 
