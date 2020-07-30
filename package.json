@@ -4,7 +4,7 @@
   "description": "Shortcuts for json schema definitions",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "tap src/*.test.js",
     "clean": "rm -fr dist/*",
     "build": "babel --ignore '**/*.test.js' --out-dir dist src/"
   },
@@ -27,10 +27,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
-    "babel-jest": "^25.1.0",
-    "jest": "^25.1.0",
-    "jest-cli": "^25.1.0",
-    "regenerator-runtime": "^0.13.3"
+    "tap": "^14.10.8"
   },
   "release": {
     "repositoryUrl": "ssh://git@github.com/yanick/json-schema-shorthand.git",

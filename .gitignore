@@ -4,3 +4,4 @@ shrinkwrap.yaml
 dist
 json-*.tgz
 coverage
+.nyc_output/

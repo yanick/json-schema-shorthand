@@ -1,19 +1,13 @@
-import {
-  shorthand,
-  add_definition,
-  object,
-  array,
-  number,
-  integer,
-  string
-} from "./index";
+import tap from "tap";
 
-test("with .bind()", () => {
+import { add_definition, number } from ".";
+
+tap.test("with .bind()", async (t) => {
   let defs = {};
   const add_def = add_definition.bind(defs);
 
   let foo = add_def("foo", number());
 
-  expect(defs).toEqual({ foo: { type: "number" } });
-  expect(foo).toEqual({ $ref: "#/definitions/foo" });
+  t.same(defs, { foo: { type: "number" } });
+  t.same(foo, { $ref: "#/definitions/foo" });
 });
