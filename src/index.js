@@ -131,6 +131,10 @@ export const object = (properties = null, ...options) =>
     ...options
   );
 
+export const allOf = (...parts) => ({
+    allOf: map_shorthand(parts)
+});
+
 export function add_definition(name, ...schemas) {
   this[name] = merge_defs(...schemas);
   return { $ref: "#/definitions/" + name };
