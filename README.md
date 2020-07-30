@@ -100,6 +100,23 @@ Expands into an array type.
 
 Expands into an object type.
 
+
+### `allOf(...schemas)`, `oneOf(...schemas)`, `anyOf(...schemas)`
+
+    let schema = allOf(array(), { items: 'number' });
+    // => { allOf: [ 
+    //      { type: 'array' }, 
+    //      { items: { type: number } } 
+    //    ] }
+
+Same for `oneOf` and `anyOf`.
+
+### `not(schema)`
+
+    let schema = not(array());
+    // => { not: { type: 'array' } } 
+
+
 ### `add_definition( name, ...schemaParts )`
 
 If using Babel and

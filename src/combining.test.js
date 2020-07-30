@@ -1,16 +1,19 @@
-import _ from 'lodash';
+import tap from "tap";
 
-import { allOf } from './index';
+import _ from "lodash";
 
-test( 'allOf', () => {
+import * as jssh from "./index";
 
-    expect(allOf({ type: 'object', properties: true}, 'number' )  ).toEqual(
-        {
-            allOf: [
-                { type: 'object', properties: true },
-                { type: 'number' },
-            ]
-        }
-    );
+for (let c of ["allOf", "anyOf", "oneOf"]) {
+  tap.test(c, async (t) => {
+    t.same(jssh[c]({ type: "object", properties: true }, "number"), {
+      [c]: [{ type: "object", properties: true }, { type: "number" }],
+    });
+  });
+}
 
+tap.test("not", async (t) => {
+  t.same(jssh.not("number"), {
+    not: { type: "number" },
+  });
 });
