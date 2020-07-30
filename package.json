@@ -4,6 +4,7 @@
   "description": "Shortcuts for json schema definitions",
   "main": "dist/index.js",
   "scripts": {
+    "release": "standard-version",
     "test": "tap src/*.test.js",
     "clean": "rm -fr dist/*",
     "build": "babel --ignore '**/*.test.js' --out-dir dist src/",
@@ -30,6 +31,7 @@
     "updeep": "^1.2.0"
   },
   "devDependencies": {
+    "standard-version": "8.0.2",
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
@@ -79,5 +81,48 @@
     "rules": {
       "lodash/prefer-lodash-method": "off"
     }
+  },
+  "standard-version": {
+    "skip": {
+      "tag": true
+    },
+    "types": [
+      {
+        "section": "Bug Fixes",
+        "type": "bug"
+      },
+      {
+        "section": "Features",
+        "type": "feat"
+      },
+      {
+        "section": "Bug Fixes",
+        "type": "fix"
+      },
+      {
+        "hidden": true,
+        "type": "chore"
+      },
+      {
+        "hidden": true,
+        "type": "docs"
+      },
+      {
+        "hidden": true,
+        "type": "style"
+      },
+      {
+        "hidden": true,
+        "type": "refactor"
+      },
+      {
+        "hidden": true,
+        "type": "perf"
+      },
+      {
+        "hidden": true,
+        "type": "test"
+      }
+    ]
   }
 }
