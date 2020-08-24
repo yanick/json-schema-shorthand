@@ -5,3 +5,5 @@ dist
 json-*.tgz
 coverage
 .nyc_output/
+pnpm-lock.yaml
+tsconfig.tsbuildinfo

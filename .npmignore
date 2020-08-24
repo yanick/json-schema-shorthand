@@ -9,3 +9,6 @@ json-*.tgz
 .travis.yml
 coverage
 .nyc_output
+tsconfig.tsbuildinfo
+pnpm-lock.yaml
+dist/*test.*

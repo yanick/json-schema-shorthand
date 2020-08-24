@@ -3,6 +3,7 @@ import tap from "tap";
 import shorthand from "./index";
 
 tap.Test.prototype.addAssert("shorthand_ok", 2, function(
+  this: any,
   received,
   expected,
   desc,
@@ -13,7 +14,9 @@ tap.Test.prototype.addAssert("shorthand_ok", 2, function(
   return this.same(shorthand(received), expected, desc, extra);
 });
 
-tap.test("shortcuts", async t => {
+type Test = typeof tap.Test & { shorthand_ok: Function };
+
+tap.test("shortcuts", async (t: Test) => {
   t.shorthand_ok(undefined, {}, 'passing "undefined"');
 
   t.shorthand_ok("string", { type: "string" }, "type as string");
@@ -61,10 +64,10 @@ tap.test("shortcuts", async t => {
   );
 
   ["allOf", "anyOf", "oneOf"].forEach(keyword => {
-    let short = {};
+    let short: Record<string, any> = {};
     short[keyword] = ["number"];
 
-    let expected = {};
+    let expected: any = {};
 
     expected[keyword] = [{ type: "number" }];
 
@@ -80,12 +83,12 @@ tap.test("shortcuts", async t => {
   t.shorthand_ok({ not: "object" }, { not: { type: "object" } }, "expands not");
 });
 
-tap.test("ref", async t => {
+tap.test("ref", async (t: Test) => {
   t.shorthand_ok("#foo", { $ref: "#foo" }, "expands #ref");
   t.shorthand_ok("$http://foo", { $ref: "http://foo" }, "expands $ref");
 });
 
-tap.test("array", async t => {
+tap.test("array", async (t: Test) => {
   t.shorthand_ok(
     { array: "number" },
     { type: "array", items: { type: "number" } },
@@ -111,7 +114,7 @@ tap.test("array", async t => {
   );
 });
 
-tap.test("range", async t => {
+tap.test("range", async (t: Test) => {
   t.shorthand_ok(
     { type: "number", range: [5, 8, true, false] },
     { type: "number", minimum: 5, exclusiveMaximum: 8 }
@@ -133,7 +136,7 @@ tap.test("range", async t => {
   );
 });
 
-tap.test("nbrItems", async t => {
+tap.test("nbrItems", async (t: Test) => {
   t.shorthand_ok(
     { type: "array", nbrItems: [5, 8] },
     { type: "array", minItems: 5, maxItems: 8 }

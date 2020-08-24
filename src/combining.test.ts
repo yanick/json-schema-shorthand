@@ -4,7 +4,7 @@ import * as jssh from "./index";
 
 for (let c of ["allOf", "anyOf", "oneOf"]) {
   tap.test(c, async t => {
-    t.same(jssh[c]({ type: "object", properties: true }, "number"), {
+    t.same((jssh as any)[c]({ type: "object", properties: true }, "number"), {
       [c]: [{ type: "object", properties: true }, { type: "number" }]
     });
   });
