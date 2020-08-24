@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/yanick/json-schema-shorthand/compare/v1.0.0...v2.0.0) (2020-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* things should continue to work as normal, but since to
+typescript is kinda of a big deal, I'm taking no chance.
+
+### Features
+
+* move project to typescript ([ca3429d](https://github.com/yanick/json-schema-shorthand/commit/ca3429db04ebc183d2b5c000e8d3d2b297a1e001))
+
 ## [1.0.0](https://github.com/yanick/json-schema-shorthand/compare/v0.3.2...v1.0.0) (2020-07-30)
 
 
