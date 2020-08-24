@@ -77,7 +77,7 @@ tap.test("object", async t => {
 tap.test("with description", async t => {
   t.match(
     object(null, "foo", { additionalProperties: true }),
-    { description: "foo", additionalProperties: true },
+    { description: "foo", additionalProperties: true } as any,
     "turn the string into desc"
   );
 });
