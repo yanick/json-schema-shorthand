@@ -23,8 +23,13 @@ tasks:
   added-changelog: git diff-ls  {{.PARENT_BRANCH}} | grep CHANGELOG.yml
 
   integrate:
-      deps: [ clean-workspace, added-tests, added-changelog ]
+      deps: [ clean-workspace, added-tests, added-changelog, check ]
       cmds:
           - git checkout {{.PARENT_BRANCH}}
           - git weld -
 
+  test:     vitest run src
+  test:dev: vitest src
+  build:    tsc
+  check:
+    deps: [ test, build ]

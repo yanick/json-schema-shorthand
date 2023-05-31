@@ -1,13 +1,13 @@
-import tap from "tap";
+import { test, expect } from 'vitest';
 
-import { add_definition, number } from ".";
+import { add_definition, number } from "./index.js";
 
-tap.test("with .bind()", async t => {
+test("with .bind()", () => {
   let defs = {};
   const add_def = add_definition.bind(defs);
 
   let foo = add_def("foo", number());
 
-  t.same(defs, { foo: { type: "number" } });
-  t.same(foo, { $ref: "#/definitions/foo" });
+    expect(defs).toMatchObject({ foo: { type: "number" } });
+    expect(foo).toMatchObject({ $ref: "#/definitions/foo" });
 });
