@@ -1,0 +1,8 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  changelog:
+    cmds:
+      - changelord print --no-next > CHANGELOG.md
