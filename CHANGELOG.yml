@@ -19,8 +19,7 @@ releases:
 
 
     * things should continue to work as normal, but since to move to
-
-    typescript is kinda of a big deal, I'm taking no chance.
+      typescript is kinda of a big deal, I'm taking no chance.
 
 
     ### Features
@@ -77,6 +76,7 @@ releases:
     ## 0.1.0 2016-08-01
       * Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
       * Add 'install' and 'synopsis' sections in doc.
+
   - version: v0.0.1
     date: 2016-07-31
     changes:
