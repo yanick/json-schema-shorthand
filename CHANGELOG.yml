@@ -10,6 +10,8 @@ releases:
         type: maint
       - desc: move from tap to vitest
         type: maint
+      - desc: update the tsconfig.json
+        type: chore
   - >
     ##
     [2.0.0](https://github.com/yanick/json-schema-shorthand/compare/v1.0.0...v2.0.0)
