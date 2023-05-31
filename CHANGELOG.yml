@@ -3,6 +3,9 @@ project:
   homepage: https://github.com/yanick/json-schema-shorthand
   with_stats: true
 releases:
+  - version: NEXT
+    changes:
+      - add j. prefixes in the README
   - version: 3.0.0
     date: 20203-05-31
     changes:
