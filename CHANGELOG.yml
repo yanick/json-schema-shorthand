@@ -3,9 +3,11 @@ project:
   homepage: https://github.com/yanick/json-schema-shorthand
   with_stats: true
 releases:
-  - version: NEXT
-    date: null
+  - version: 3.0.0
+    date: 20203-05-31
     changes:
+      - desc: change typing for json-schema-to-ts compatibility
+        type: feat
       - desc: use changelord for changelog management
         type: maint
       - desc: move from tap to vitest
@@ -14,8 +16,6 @@ releases:
         type: chore
       - desc: move eslint config to own file
         type: chore
-      - desc: change typing for json-schema-to-ts compatibility
-        type: feat
       - desc: removing addDefinition
         type: feat
   - >

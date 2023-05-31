@@ -1,14 +1,29 @@
-# Changelog
+# Changelog for [json-schema-shorthand][homepage]
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+## 3.0.0 20203-05-31
+
+
+### Features
+
+  * change typing for json-schema-to-ts compatibility
+  * removing addDefinition
+
+### Package maintenance
+
+  * use changelord for changelog management
+  * move from tap to vitest
+  * update the tsconfig.json
+  * move eslint config to own file
+
 
 ## [2.0.0](https://github.com/yanick/json-schema-shorthand/compare/v1.0.0...v2.0.0) (2020-08-24)
 
 
 ### ⚠ BREAKING CHANGES
 
-* things should continue to work as normal, but since to
-typescript is kinda of a big deal, I'm taking no chance.
+* things should continue to work as normal, but since to move to
+  typescript is kinda of a big deal, I'm taking no chance.
+
 
 ### Features
 
@@ -55,5 +70,17 @@ typescript is kinda of a big deal, I'm taking no chance.
   * Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
   * Add 'install' and 'synopsis' sections in doc.
 
-## 0.0.1 2016-07-31
-    * Initial release
+
+## v0.0.1 2016-07-31
+
+
+### Features
+
+  * Initial release
+
+
+
+
+
+
+    [homepage]: https://github.com/yanick/json-schema-shorthand

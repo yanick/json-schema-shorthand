@@ -1,7 +1,6 @@
 node_modules
 package-lock.json
 shrinkwrap.yaml
-dist
 .prettierignore
 src/*
 babel.config.js
@@ -14,3 +13,6 @@ pnpm-lock.yaml
 dist/*test.*
 .perl-version
 CHANGELOG.yml
+.eslintrc.yml
+Taskfile.yaml
+tsconfig.json

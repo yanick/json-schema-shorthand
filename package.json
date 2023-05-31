@@ -1,11 +1,15 @@
 {
   "name": "json-schema-shorthand",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Shortcuts for json schema definitions",
   "type": "module",
-  "main": "dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {},
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "repository": "git+https://github.com/yanick/json-schema-shorthand.git",
   "keywords": [
     "json",
