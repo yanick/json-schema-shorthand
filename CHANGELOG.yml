@@ -8,6 +8,8 @@ releases:
     changes:
       - desc: use changelord for changelog management
         type: maint
+      - desc: move from tap to vitest
+        type: maint
   - >
     ##
     [2.0.0](https://github.com/yanick/json-schema-shorthand/compare/v1.0.0...v2.0.0)
@@ -76,7 +78,6 @@ releases:
     ## 0.1.0 2016-08-01
       * Recurse down 'allOf', 'oneOf', 'anyOf', 'not'.
       * Add 'install' and 'synopsis' sections in doc.
-
   - version: v0.0.1
     date: 2016-07-31
     changes:
@@ -84,7 +85,7 @@ releases:
 change_types:
   - keywords:
       - feat
-      - ''
+      - ""
     level: minor
     title: Features
   - keywords:

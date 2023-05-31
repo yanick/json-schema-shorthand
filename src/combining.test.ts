@@ -1,17 +1,17 @@
-import tap from "tap";
+import { test, expect } from "vitest";
 
-import * as jssh from "./index";
+import * as schema from "./index.js";
 
-for (let c of ["allOf", "anyOf", "oneOf"]) {
-  tap.test(c, async t => {
-    t.same((jssh as any)[c]({ type: "object", properties: true }, "number"), {
-      [c]: [{ type: "object", properties: true }, { type: "number" }]
-    });
+test.each(["allOf", "anyOf", "oneOf"])("%s", (c) => {
+  expect(
+    schema[c]({ type: "object", properties: true }, "number")
+  ).toMatchObject({
+    [c]: [{ type: "object", properties: true }, { type: "number" }],
   });
-}
+});
 
-tap.test("not", async t => {
-  t.same(jssh.not("number"), {
-    not: { type: "number" }
+test("not", () => {
+  expect(schema.not("number")).toMatchObject({
+    not: { type: "number" },
   });
 });

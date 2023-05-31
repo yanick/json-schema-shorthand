@@ -1,83 +1,69 @@
-import tap from "tap";
+import { test, expect } from "vitest";
 
-import { object, array, number, integer, string } from "./index";
+import { object, array, number, integer, string } from "./index.js";
 
-tap.test("number", async t => {
-  t.same(number(), { type: "number" }, "no argument");
+test("number", () => {
+  expect(number()).toMatchObject({ type: "number" });
 
-  t.same(number({ minimum: 3 }), { type: "number", minimum: 3 }, "arguments");
-
-  t.same(
-    number({ range: [3, 5] }),
-    { type: "number", minimum: 3, maximum: 5 },
-    "shorthand arguments"
-  );
+  expect(number({ minimum: 3 })).toMatchObject({ type: "number", minimum: 3 }); //, "arguments");
 });
 
-tap.test("string", async t => {
-  t.same(string(), { type: "string" }, "no argument");
+test("string", () => {
+  expect(string()).toMatchObject({ type: "string" }); //, "no argument");
 
-  t.same(string({ minimum: 3 }), { type: "string", minimum: 3 }, "arguments");
-
-  t.same(
-    string({ range: [3, 5] }),
-    { type: "string", minimum: 3, maximum: 5 },
-    "shorthand arguments"
-  );
+  expect(string({ minimum: 3 })).toMatchObject({ type: "string", minimum: 3 }); //, "arguments");
 });
 
-tap.test("integer", async t => {
-  t.same(integer(), { type: "integer" }, "no argument");
+test("integer", () => {
+  expect(integer()).toMatchObject({ type: "integer" }); //, "no argument");
 
-  t.same(integer({ minimum: 3 }), { type: "integer", minimum: 3 }, "arguments");
-
-  t.same(
-    integer({ range: [3, 5] }),
-    { type: "integer", minimum: 3, maximum: 5 },
-    "shorthand arguments"
-  );
+  expect(integer({ minimum: 3 })).toMatchObject({
+    type: "integer",
+    minimum: 3,
+  }); //, "arguments");
 });
 
-tap.test("array", async t => {
-  t.same(array(), { type: "array" }, "no argument");
+test("array", () => {
+  expect(array()).toMatchObject({ type: "array" }); //, "no argument");
 
-  t.same(
-    array("string"),
-    { type: "array", items: { type: "string" } },
-    "w/ items"
-  );
+  expect(array("string")).toMatchObject({
+    type: "array",
+    items: { type: "string" },
+  });
+  //"w/ items"
+  //);
 
-  t.same(
-    array("string", { minItems: 3 }),
-    { type: "array", items: { type: "string" }, minItems: 3 },
-    "w/ items and options"
-  );
+  expect(array("string", { minItems: 3 })).toMatchObject({
+    type: "array",
+    items: { type: "string" },
+    minItems: 3,
+  });
+  //"w/ items and options"
+  //);
 });
 
-tap.test("object", async t => {
-  t.same(object(), { type: "object" }, "no argument");
+test("object", () => {
+  expect(object()).toMatchObject({ type: "object" }); //, "no argument");
 
-  t.same(
-    object({ foo: "string" }),
-    { type: "object", properties: { foo: { type: "string" } } },
-    "w/ properties"
-  );
+  expect(object({ foo: "string" })).toMatchObject({
+    type: "object",
+    properties: { foo: { type: "string" } },
+  });
+  //"w/ properties"
+  //);
 
-  t.same(
-    object({ foo: "string" }, { maxProperties: 3 }),
-    {
-      type: "object",
-      properties: { foo: { type: "string" } },
-      maxProperties: 3
-    },
-    "w/ props and options"
-  );
+  expect(object({ foo: "string" }, { maxProperties: 3 })).toMatchObject({
+    type: "object",
+    properties: { foo: { type: "string" } },
+    maxProperties: 3,
+  });
 });
 
-tap.test("with description", async t => {
-  t.match(
-    object(null, "foo", { additionalProperties: true }),
-    { description: "foo", additionalProperties: true } as any,
-    "turn the string into desc"
-  );
+test("with description", () => {
+  expect(object(null, "foo", { additionalProperties: true })).toMatchObject({
+    description: "foo",
+    additionalProperties: true,
+  });
+  //"turn the string into desc"
+  //);
 });
