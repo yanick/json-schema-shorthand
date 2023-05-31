@@ -47,7 +47,7 @@ For example:
 
 Also, under the hood the merging of all the `schemaParts` is done via 
 `updeep`, so you could potentially do funkier things than just pass
-litteral values to it. Just sayin'.
+literal values to it. Just sayin'.
 
 
 ### `shorthand( schema )`
@@ -70,7 +70,7 @@ Expands into a number type.
     let schema = integer({ maximum: 5 });
     // => { type: 'integer', maximum: 5 }
 
-Expands into a integer type.
+Expands into an integer type.
 
 ### `string( ...schemaParts )`
 
@@ -95,7 +95,6 @@ Expands into an array type.
     //      description: "yadah" }
 
 Expands into an object type.
-
 
 ### `allOf(...schemas)`, `oneOf(...schemas)`, `anyOf(...schemas)`
 
