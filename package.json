@@ -37,43 +37,5 @@
     "tap": "^14.10.8",
     "typescript": "^3.9.7",
     "vitest": "^0.31.3"
-  },
-  "release": {
-    "repositoryUrl": "ssh://git@github.com/yanick/json-schema-shorthand.git",
-    "branches": [
-      "releases",
-      "master"
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm"
-    ]
-  },
-  "eslintConfig": {
-    "env": {
-      "amd": true,
-      "es6": true,
-      "node": true
-    },
-    "extends": [
-      "prettier",
-      "eslint:recommended",
-      "plugin:you-dont-need-lodash-underscore/compatible",
-      "plugin:lodash/recommended"
-    ],
-    "ignorePatterns": [
-      "src/node_modules"
-    ],
-    "parserOptions": {
-      "ecmaFeatures": {
-        "modules": true
-      },
-      "ecmaVersion": "2020",
-      "sourceType": "module"
-    },
-    "rules": {
-      "lodash/prefer-lodash-method": "off"
-    }
   }
 }
