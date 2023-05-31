@@ -49,7 +49,7 @@ test("misc", () => {
   shorthandOk(
     { properties: { foo: "number!", bar: "#baz!" } },
     {
-      required: ["bar","foo"],
+      required: ["foo","bar"],
       properties: {
         foo: { type: "number" },
         bar: { $ref: "#baz" },
@@ -70,8 +70,8 @@ test("misc", () => {
   });
 
   shorthandOk(
-    { definitions: { foo: "object" } },
-    { definitions: { foo: { type: "object" } } },
+    { $defs: { foo: "object" } },
+    { $defs: { foo: { type: "object" } } },
     "expands definitions"
   );
 
