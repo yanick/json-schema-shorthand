@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "release": "standard-version",
     "test": "tap src/*.test.ts",
     "clean": "rm -fr dist/*",
     "build": "babel --ignore '**/*.test.js' --out-dir dist src/",
@@ -45,7 +44,6 @@
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.10.0",
     "npm-run-all": "^4.1.5",
-    "standard-version": "8.0.2",
     "tap": "^14.10.8",
     "typescript": "^3.9.7",
     "vitest": "^0.31.3"
@@ -87,48 +85,5 @@
     "rules": {
       "lodash/prefer-lodash-method": "off"
     }
-  },
-  "standard-version": {
-    "skip": {
-      "tag": true
-    },
-    "types": [
-      {
-        "section": "Bug Fixes",
-        "type": "bug"
-      },
-      {
-        "section": "Features",
-        "type": "feat"
-      },
-      {
-        "section": "Bug Fixes",
-        "type": "fix"
-      },
-      {
-        "hidden": true,
-        "type": "chore"
-      },
-      {
-        "hidden": true,
-        "type": "docs"
-      },
-      {
-        "hidden": true,
-        "type": "style"
-      },
-      {
-        "hidden": true,
-        "type": "refactor"
-      },
-      {
-        "hidden": true,
-        "type": "perf"
-      },
-      {
-        "hidden": true,
-        "type": "test"
-      }
-    ]
   }
 }
