@@ -30,16 +30,12 @@ test("array", () => {
     type: "array",
     items: { type: "string" },
   });
-  //"w/ items"
-  //);
 
   expect(array("string", { minItems: 3 })).toMatchObject({
     type: "array",
     items: { type: "string" },
     minItems: 3,
   });
-  //"w/ items and options"
-  //);
 });
 
 test("object", () => {

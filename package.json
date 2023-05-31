@@ -35,7 +35,7 @@
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.10.0",
-    "typescript": "^3.9.7",
+    "typescript": "^5.0.4",
     "vitest": "^0.31.3"
   }
 }

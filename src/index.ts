@@ -240,26 +240,6 @@ export function shorthand<S>(schema: S): ExpandShorthand<S> {
 }
 
 export default shorthand;
-// export default function shorthand(obj = {}) {
-//   const x = ["$ref", "type"] as const;
-//     const y = x.map((field) =>
-//       u.if((obj) => /!$/.test(obj[field]), {
-//         required: true,
-//         [field]: (v) => v.replace(/!$/, ""),
-//       })
-//     ) as [any];
-//   return (createPipe as any)(
-//     expandString,
-//         ...y,
-//     process_object,
-//     expand_shorthands,
-//     process_array,
-//     groom_required_properties,
-//     expand_items,
-//     process_nbrItems,
-//     process_range
-//   )(obj);
-// }
 
 function mergeDefs(...defs) {
   return shorthand(
@@ -286,33 +266,95 @@ const simpleDef =
   (...options) =>
     mergeDefs({ type }, ...options);
 
-export const number = simpleDef("number");
-export const integer = simpleDef("integer");
-export const string = simpleDef("string");
+interface SimpleDef<T> {
+  (): { type: T };
+  (description: string): { type: T; description: string };
+  <O extends {}>(description: string, schema: O): {
+    type: T;
+    description: string;
+  } & ExpandShorthand<O>;
+  <O extends {}>(schema: O): { type: T } & ExpandShorthand<O>;
+}
 
-export const array = (items = null, ...options) =>
-  mergeDefs({ type: "array", items: u.if(!!items, items) }, ...options);
+export const number: SimpleDef<"number"> = simpleDef("number");
+export const integer: SimpleDef<"integer"> = simpleDef("integer");
+export const string: SimpleDef<"string"> = simpleDef("string");
+export const boolean: SimpleDef<"boolean"> = simpleDef("boolean");
+const _null: SimpleDef<"null"> = simpleDef("null");
+export { _null as null };
 
-export const object = (properties = null, ...options) =>
-  mergeDefs(
-    {
-      type: "object",
-      properties: u.if(!!properties, properties),
-    },
-    ...options
-  );
+interface ArrayDef {
+  (): { type: "array" };
+  <I>(items: I): ExpandShorthand<{ array: I }>;
+  <I, Q extends Record<any, any>>(items: I, extra: Q): ExpandShorthand<
+    { array: I } & Q
+  >;
+}
+
+export const array: ArrayDef = (...args) => {
+  const schema: any = {
+    type: "array",
+  };
+
+  if (args.length) schema.items = args.shift();
+
+  return mergeDefs(schema, ...args);
+};
+
+interface ObjectDef {
+  (): { type: "object" };
+  <P extends {}>(properties: P): ExpandShorthand<{ object: P }>;
+  <S extends string>(desc: S): { type: "object"; description: S };
+  <S extends string, P extends {}>(desc: S, properties: P): RequiredProperties<{
+    type: "object";
+    properties: {
+      [k in keyof P]: ExpandShorthand<P[k]>;
+    };
+  }> & { description: S };
+  <S extends string, P extends {}, Q extends {}>(
+    desc: S,
+    properties: P,
+    extra: Q
+  ): ExpandShorthand<
+    { type: "object"; description: S; properties: ExpandShorthand<P> } & Q
+  >;
+  <P extends {}, Q extends {}>(properties: P, extra: Q): ExpandShorthand<
+    { object: P } & Q
+  >;
+}
+
+export const object: ObjectDef = (...args) => {
+  let schema: any = {
+    type: "object",
+  };
+
+  if (typeof args[0] === "string") {
+    schema.description = args.shift();
+  }
+
+  const properties = args.shift();
+  schema = u(schema, { properties });
+
+  return mergeDefs(schema, ...args);
+};
 
 /** @type (key: string) => (...parts: SchemaPart[]) => Record<string, JSONSchema6Type>
  */
 const combinatory =
   (key) =>
-  (...parts) => ({
+  (parts, extra = {}) => ({
     [key]: map_shorthand(parts),
+    ...extra,
   });
 
-export const allOf = combinatory("allOf");
-export const anyOf = combinatory("anyOf");
-export const oneOf = combinatory("oneOf");
-export const not = (inner) => ({
-  not: shorthand(inner),
-});
+interface Combi<X extends string> {
+  <S>(schema: S): ExpandShorthand<Record<X, S>>;
+}
+
+export const allOf = combinatory("allOf") as Combi<"allOf">;
+export const anyOf: Combi<"anyOf"> = combinatory("anyOf") as any;
+export const oneOf: Combi<"oneOf"> = combinatory("oneOf") as any;
+export const not: Combi<"not"> = (inner) =>
+  ({
+    not: shorthand(inner),
+  } as any);
