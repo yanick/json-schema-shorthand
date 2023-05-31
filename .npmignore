@@ -12,3 +12,5 @@ coverage
 tsconfig.tsbuildinfo
 pnpm-lock.yaml
 dist/*test.*
+.perl-version
+CHANGELOG.yml
