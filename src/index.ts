@@ -316,15 +316,3 @@ export const oneOf = combinatory("oneOf");
 export const not = (inner) => ({
   not: shorthand(inner),
 });
-
-/**
- * @param {string} name
- *
- */
-export function addDefinition(name, ...schemas) {
-  this[name] = mergeDefs(...schemas);
-  return { $ref: "#/definitions/" + name };
-}
-
-/** @deprecated use 'addDefinition' instead */
-export const add_definition = addDefinition;
