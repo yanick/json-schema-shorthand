@@ -4,7 +4,7 @@ import * as schema from "./index.js";
 
 test.each(["allOf", "anyOf", "oneOf"])("%s", (c) => {
   expect(
-    schema[c]({ type: "object", properties: true }, "number")
+    schema[c]([{ type: "object", properties: true }, "number"])
   ).toMatchObject({
     [c]: [{ type: "object", properties: true }, { type: "number" }],
   });

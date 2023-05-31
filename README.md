@@ -1,6 +1,6 @@
 # json-schema-shorthand
 
-[JSON Schema](http://json-schema.org/) is a useful beast, 
+[JSON Schema](http://json-schema.org/) is a useful beast,
 but its schema definition can be a little bit more long-winded
 than necessary. This module allows to use a few shortcuts that
 will be expanded into their canonical form.
@@ -29,18 +29,18 @@ will be expanded into their canonical form.
 ## Compatibility with [json-schema-to-ts](https://www.npmjs.com/package/json-schema-to-ts)
 
 `json-schema-shorthand` can be used in conjecture with `json-schema-to-ts`.
-Just remember to `as const` your schemas to get the most precise types out 
+Just remember to `as const` your schemas to get the most precise types out
 of `FromSchema<>`.
 
-  const res = shorthand({
-    object: {
-      foo: "number!",
-    },
-  } as const);
+const res = shorthand({
+object: {
+foo: "number!",
+},
+} as const);
 
-  expectTypeOf(s).toMatchTypeOf<{
-    foo: number;
-  }>();
+expectTypeOf(s).toMatchTypeOf<{
+foo: number;
+}>();
 
 ## Functions
 
@@ -49,14 +49,13 @@ of `FromSchema<>`.
 Takes in a data structure
 and expands any shorthand (see next section) found in it. Note that because
 `json-schema-shorthand` is using
-[@yanick/updeep-remeda](https://www.npmjs.com/package/@yanick/updeep-remeda) internally, the returned schema 
+[@yanick/updeep-remeda](https://www.npmjs.com/package/@yanick/updeep-remeda) internally, the returned schema
 is [frozen](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
 
 Also the default export of `json-schema-shorthand`.
 
     let schema = j.shorthand( { object: { foo: 'number' } });
     // => { type: 'object', properties: { foo: { type: 'number' } } }
-
 
 ### `number( description?, schema? )`
 
@@ -79,7 +78,7 @@ Expands into an integer type.
 
 Expands into a string type.
 
-### `array( description?, itemsSchema, schema? )`
+### `array( itemsSchema, schema? )`
 
     let schema = array('number', { maxItems: 5 });
     // => { type: 'array', items: { type: 'number' }, maxItems: 5 }
@@ -89,19 +88,19 @@ Expands into an array type.
 ### `object( description?, properties, schema? )`
 
     let schema = object({ foo: 'string!' }, { description: "yadah" });
-    // => { type: 'object', 
-    //      properties: { foo: { type: 'string' } }, 
+    // => { type: 'object',
+    //      properties: { foo: { type: 'string' } },
     //      required: [ 'foo' ],
     //      description: "yadah" }
 
 Expands into an object type.
 
-### `allOf(description?,schema)`, `oneOf(description?,schema)`, `anyOf(description?, schema)`
+### `allOf(schemas,extra)`, `oneOf(schemas,extra)`, `anyOf(schemas, extra)`
 
     let schema = allOf(array(), { items: 'number' });
-    // => { allOf: [ 
-    //      { type: 'array' }, 
-    //      { items: { type: number } } 
+    // => { allOf: [
+    //      { type: 'array' },
+    //      { items: { type: number } }
     //    ] }
 
 Same for `oneOf` and `anyOf`.
@@ -109,15 +108,13 @@ Same for `oneOf` and `anyOf`.
 ### `not(description?, schema)`
 
     let schema = not(array());
-    // => { not: { type: 'array' } } 
-
+    // => { not: { type: 'array' } }
 
 ## Shorthands
 
-
 ### Types as string
 
-If a string `type` is encountered where a property definition is 
+If a string `type` is encountered where a property definition is
 expected, the string is expanded to the object `{ "type": type }`.
 
     {
@@ -135,7 +132,7 @@ expands to
 If the string begins with a `#`, the type is assumed to be a local reference and
 `#type` is expanded to `{ "$ref": type }`.
 
-    { "foo": "#/definitions/bar" } 
+    { "foo": "#/definitions/bar" }
 
 becomes
 
@@ -144,7 +141,7 @@ becomes
 If the string begins with a `$`, the type is assumed to be a general reference and
 `$type` is expanded to `{ "$ref": type }`.
 
-    { "foo": "$http://foo.com/bar" } 
+    { "foo": "$http://foo.com/bar" }
 
 becomes
 
@@ -163,7 +160,6 @@ becomes
     }                                           }
                                             }
 
-
 ### `array` property
 
 `{ array: items }` expands to `{ type: "array", items }`.
@@ -173,10 +169,9 @@ becomes
     foo: {                                  foo: {
         array: 'number'                         type: "array",
     }                                           items: {
-                                                    type: 'number' 
+                                                    type: 'number'
                                                 }
                                             }
-
 
 ### `required` property
 
@@ -188,7 +183,7 @@ up to the `required` attribute of its parent object.
 
     foo: {                                  foo: {
         properties: {                           required: [ 'bar' ],
-          bar: { required: true },              properties: { 
+          bar: { required: true },              properties: {
           baz: { }                                bar: {},
         }                                         baz: {}
     }                                       }
@@ -201,8 +196,7 @@ as required.
 
     foo: {                                  foo: {
         properties: {                           required: [ 'bar', 'baz' ],
-          bar: 'number!'                        properties: { 
+          bar: 'number!'                        properties: {
           baz: '#baz_type!'                       bar: {   type: 'number' },
         }                                         baz: { '$ref': '#baz_type' }
     }                                       }
-
