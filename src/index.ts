@@ -168,7 +168,7 @@ type ExpandShorthand<T> = InnerExpandShorthand<T>;
 
 const isBasicType = (s: any): s is BasicType => basicType.includes(s);
 
-function shorthand<S>(schema: S): ExpandShorthand<S> {
+export function shorthand<S>(schema: S): ExpandShorthand<S> {
   if (typeof schema === "string") {
     if (schema.endsWith("!"))
       return {

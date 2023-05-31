@@ -11,9 +11,9 @@ will be expanded into their canonical form.
 
 ## Typical use
 
-    import shorthand, { object, array } from 'json-schema-shorthand';
+    import * as j from 'json-schema-shorthand';
 
-    let schema = object({
+    let schema = j.object({
         foo: 'number',
         bar: array('string'),
     });
@@ -26,67 +26,67 @@ will be expanded into their canonical form.
     //    }
     // }
 
+## Compatibility with [json-schema-to-ts](https://www.npmjs.com/package/json-schema-to-ts)
+
+`json-schema-shorthand` can be used in conjecture with `json-schema-to-ts`.
+Just remember to `as const` your schemas to get the most precise types out 
+of `FromSchema<>`.
+
+  const res = shorthand({
+    object: {
+      foo: "number!",
+    },
+  } as const);
+
+  expectTypeOf(s).toMatchTypeOf<{
+    foo: number;
+  }>();
+
 ## Functions
 
-The `schemaParts` that most of those functions take is a list
-of simple arrays that will be merged together to form the final 
-schema (which will be then expanded via `shorthand()`. If a
-`schemaParts` item is a string, it'll be expanded as a description
-attribute. 
+### `j.shorthand( schema )`
 
-For example:
-
-    object({ foo: 'number' }, "a thing", { minProperties: 3 } )
-
-    // => {
-    //    type: "object",
-    //    properties: { foo: { type: "number" } },
-    //    description: "a thing",
-    //    minProperties: 3
-    // }
-
-Also, under the hood the merging of all the `schemaParts` is done via 
-`updeep`, so you could potentially do funkier things than just pass
-literal values to it. Just sayin'.
-
-
-### `shorthand( schema )`
-
-The default export of `json-schema-shorthand`. Takes in a data structure
+Takes in a data structure
 and expands any shorthand (see next section) found in it. Note that because
 `json-schema-shorthand` is using
-[updeep](https://github.com/substantial/updeep) internally, the returned schema 
+[@yanick/updeep-remeda](https://www.npmjs.com/package/@yanick/updeep-remeda) internally, the returned schema 
 is [frozen](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
 
-### `number( ...schemaParts )`
+Also the default export of `json-schema-shorthand`.
 
-    let schema = number({ maximum: 5 });
-    // => { type: 'number', maximum: 5 }
+    let schema = j.shorthand( { object: { foo: 'number' } });
+    // => { type: 'object', properties: { foo: { type: 'number' } } }
+
+
+### `number( description?, schema? )`
+
+    let schema = number( 'number of thingies', { maximum: 5 });
+    // => { type: 'number', description: 'number of thingies', maximum: 5 }
 
 Expands into a number type.
 
-### `integer( ...schemaParts )`
+### `integer( description?, schema? )`
 
     let schema = integer({ maximum: 5 });
     // => { type: 'integer', maximum: 5 }
 
 Expands into an integer type.
 
-### `string( ...schemaParts )`
+### `string( description?, schema? )`
 
     let schema = string({ maxLength: 5 });
     // => { type: 'string', maxLength: 5 }
 
 Expands into a string type.
 
-### `array( itemsSchema, ...schemaParts )`
+### `array( description?, itemsSchema, schema? )`
 
     let schema = array('number', { maxItems: 5 });
     // => { type: 'array', items: { type: 'number' }, maxItems: 5 }
 
 Expands into an array type.
 
-### `object( properties, ...schemaParts )`
+### `object( description?, properties, schema? )`
 
     let schema = object({ foo: 'string!' }, { description: "yadah" });
     // => { type: 'object', 
@@ -96,7 +96,7 @@ Expands into an array type.
 
 Expands into an object type.
 
-### `allOf(...schemas)`, `oneOf(...schemas)`, `anyOf(...schemas)`
+### `allOf(description?,schema)`, `oneOf(description?,schema)`, `anyOf(description?, schema)`
 
     let schema = allOf(array(), { items: 'number' });
     // => { allOf: [ 
@@ -106,7 +106,7 @@ Expands into an object type.
 
 Same for `oneOf` and `anyOf`.
 
-### `not(schema)`
+### `not(description?, schema)`
 
     let schema = not(array());
     // => { not: { type: 'array' } } 
@@ -206,18 +206,3 @@ as required.
         }                                         baz: { '$ref': '#baz_type' }
     }                                       }
 
-
-### `range` property
-
-Shortcut to set `minimum` and `maximum` in a single array. Two boolean values
-can also be provided to specify if the extrema are inclusive (`true` by
-default).
-
-    shorthand                              expanded
-    ------------------------               ---------------------------
-
-    foo: {                                  foo: {
-        type: 'number',                         type: 'number',
-        range: [ 5, 8, true, false ]             minimum: 5,
-    }                                            exclusiveMaximum: 8,
-                                            }
