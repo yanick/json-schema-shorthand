@@ -32,15 +32,14 @@ will be expanded into their canonical form.
 Just remember to `as const` your schemas to get the most precise types out
 of `FromSchema<>`.
 
-const res = shorthand({
-object: {
-foo: "number!",
-},
-} as const);
+    const res = j.shorthand({
+        object: {
+            foo: "number!",
+        },
+        } as const
+    );
 
-expectTypeOf(s).toMatchTypeOf<{
-foo: number;
-}>();
+    expectTypeOf(s).toMatchTypeOf<{ foo: number; }>();
 
 ## Functions
 
@@ -57,37 +56,37 @@ Also the default export of `json-schema-shorthand`.
     let schema = j.shorthand( { object: { foo: 'number' } });
     // => { type: 'object', properties: { foo: { type: 'number' } } }
 
-### `number( description?, schema? )`
+### `j.number( description?, schema? )`
 
-    let schema = number( 'number of thingies', { maximum: 5 });
+    let schema = j.number( 'number of thingies', { maximum: 5 });
     // => { type: 'number', description: 'number of thingies', maximum: 5 }
 
 Expands into a number type.
 
-### `integer( description?, schema? )`
+### `j.integer( description?, schema? )`
 
-    let schema = integer({ maximum: 5 });
+    let schema = j.integer({ maximum: 5 });
     // => { type: 'integer', maximum: 5 }
 
 Expands into an integer type.
 
-### `string( description?, schema? )`
+### `j.string( description?, schema? )`
 
-    let schema = string({ maxLength: 5 });
+    let schema = j.string({ maxLength: 5 });
     // => { type: 'string', maxLength: 5 }
 
 Expands into a string type.
 
-### `array( itemsSchema, schema? )`
+### `j.array( itemsSchema, schema? )`
 
-    let schema = array('number', { maxItems: 5 });
+    let schema = j.array('number', { maxItems: 5 });
     // => { type: 'array', items: { type: 'number' }, maxItems: 5 }
 
 Expands into an array type.
 
-### `object( description?, properties, schema? )`
+### `j.object( description?, properties, schema? )`
 
-    let schema = object({ foo: 'string!' }, { description: "yadah" });
+    let schema = j.object({ foo: 'string!' }, { description: "yadah" });
     // => { type: 'object',
     //      properties: { foo: { type: 'string' } },
     //      required: [ 'foo' ],
@@ -95,9 +94,9 @@ Expands into an array type.
 
 Expands into an object type.
 
-### `allOf(schemas,extra)`, `oneOf(schemas,extra)`, `anyOf(schemas, extra)`
+### `j.allOf(schemas,extra)`, `j.oneOf(schemas,extra)`, `j.anyOf(schemas, extra)`
 
-    let schema = allOf(array(), { items: 'number' });
+    let schema = j.allOf(j.array(), { items: 'number' });
     // => { allOf: [
     //      { type: 'array' },
     //      { items: { type: number } }
@@ -105,9 +104,9 @@ Expands into an object type.
 
 Same for `oneOf` and `anyOf`.
 
-### `not(description?, schema)`
+### `j.not(description?, schema)`
 
-    let schema = not(array());
+    let schema = j.not(array());
     // => { not: { type: 'array' } }
 
 ## Shorthands
