@@ -5,6 +5,7 @@ version: '3'
 vars:
     PARENT_BRANCH: main
     SKIP_ADDED_TESTS: 0
+    SKIP_ADDED_CHANGELOG: 0
 
 tasks:
   changelog:
@@ -20,7 +21,12 @@ tasks:
         git diff-ls  {{.PARENT_BRANCH}} | grep test
       {{end}}
 
-  added-changelog: git diff-ls  {{.PARENT_BRANCH}} | grep CHANGELOG.yml
+  added-changelog: |
+      {{if eq .SKIP_ADDED_CHANGELOG "1"}}
+        echo skipping
+      {{else}} 
+        git diff-ls  {{.PARENT_BRANCH}} | grep CHANGELOG.yml
+      {{end}}
 
   integrate:
       deps: [ clean-workspace, added-tests, added-changelog, check ]
