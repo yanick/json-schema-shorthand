@@ -14,6 +14,8 @@ releases:
         type: chore
       - desc: move eslint config to own file
         type: chore
+      - desc: change typing for json-schema-to-ts compatibility
+        type: feat
   - >
     ##
     [2.0.0](https://github.com/yanick/json-schema-shorthand/compare/v1.0.0...v2.0.0)
