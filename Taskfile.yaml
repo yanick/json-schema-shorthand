@@ -2,7 +2,29 @@
 
 version: '3'
 
+vars:
+    PARENT_BRANCH: main
+    SKIP_ADDED_TESTS: 0
+
 tasks:
   changelog:
     cmds:
       - changelord print --no-next > CHANGELOG.md
+
+  clean-workspace: git is-clean
+
+  added-tests: |
+      {{if eq .SKIP_ADDED_TESTS "1"}}
+        echo skipping
+      {{else}} 
+        git diff-ls  {{.PARENT_BRANCH}} | grep test
+      {{end}}
+
+  added-changelog: git diff-ls  {{.PARENT_BRANCH}} | grep CHANGELOG.yml
+
+  integrate:
+      deps: [ clean-workspace, added-tests, added-changelog ]
+      cmds:
+          - git checkout {{.PARENT_BRANCH}}
+          - git weld -
+
