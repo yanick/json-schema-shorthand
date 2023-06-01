@@ -8,6 +8,9 @@ releases:
       - add j. prefixes in the README
       - desc: remove unused code
         type: chore
+      - type: feat
+        desc: "support { number: {...} } and friends"
+        commit: 34c63fd76da3eddd7dffc32fa1413b91ee74093c
   - version: 3.0.0
     date: 20203-05-31
     changes:
