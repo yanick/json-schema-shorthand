@@ -1,6 +1,6 @@
 {
   "name": "json-schema-shorthand",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Shortcuts for json schema definitions",
   "type": "module",
   "types": "./dist/index.d.ts",

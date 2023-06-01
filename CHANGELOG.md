@@ -1,5 +1,25 @@
 # Changelog for [json-schema-shorthand][homepage]
 
+
+
+## 3.1.0 2023-06-01
+
+
+### Features
+
+  * add j. prefixes in the README
+  * support { number: {...} } and friends
+
+### Package maintenance
+
+  * remove unused code
+
+### Statistics
+
+  * code churn: 4 files changed, 65 insertions(+), 108 deletions(-)
+
+
+
 ## 3.0.0 20203-05-31
 
 

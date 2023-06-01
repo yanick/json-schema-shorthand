@@ -4,6 +4,8 @@ project:
   with_stats: true
 releases:
   - version: NEXT
+    changes: []
+  - version: 3.1.0
     changes:
       - add j. prefixes in the README
       - desc: remove unused code
@@ -11,6 +13,10 @@ releases:
       - type: feat
         desc: "support { number: {...} } and friends"
         commit: 34c63fd76da3eddd7dffc32fa1413b91ee74093c
+      - type: stats
+        desc: |
+          code churn: 4 files changed, 65 insertions(+), 108 deletions(-)
+    date: 2023-06-01
   - version: 3.0.0
     date: 20203-05-31
     changes:
