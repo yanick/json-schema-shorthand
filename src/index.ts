@@ -6,21 +6,7 @@ const isString = function (target: any): target is string {
   return typeof target === "string";
 };
 
-/**
- * @typedef { import('json-schema').JSONSchema6Type } JSONSchema6Type
- */
-
-/**
- * @typedef { string | object | null | JSONSchema6Type } SchemaPart
- */
-
-/**
- * @param {number} min
- * @param {number} max
- * @param {boolean} [minInc=true]
- * @param {boolean} [maxInc=true]
- */
-function groomRange(min, max, min_inc = true, max_inc = true) {
+function groomRange(min: number, max: number, min_inc = true, max_inc = true) {
   return {
     [min_inc ? "minimum" : "exclusiveMinimum"]: min,
     [max_inc ? "maximum" : "exclusiveMaximum"]: max,
@@ -261,10 +247,8 @@ interface SimpleDef2<T> {
   <D extends Record<string, any>>(d: D): { type: T } & D;
 }
 
-const simpleDef =
-  (type: string) =>
-  (...options) =>
-    mergeDefs({ type }, ...options);
+const simpleDef = <S extends string>(type: S) =>
+  ((...options) => mergeDefs({ type }, ...options)) as SimpleDef<S>;
 
 interface SimpleDef<T> {
   (): { type: T };
@@ -276,11 +260,11 @@ interface SimpleDef<T> {
   <O extends {}>(schema: O): { type: T } & ExpandShorthand<O>;
 }
 
-export const number: SimpleDef<"number"> = simpleDef("number");
-export const integer: SimpleDef<"integer"> = simpleDef("integer");
-export const string: SimpleDef<"string"> = simpleDef("string");
-export const boolean: SimpleDef<"boolean"> = simpleDef("boolean");
-const _null: SimpleDef<"null"> = simpleDef("null");
+export const number = simpleDef("number");
+export const integer = simpleDef("integer");
+export const string = simpleDef("string");
+export const boolean = simpleDef("boolean");
+const _null = simpleDef("null");
 export { _null as null };
 
 interface ArrayDef {
@@ -338,8 +322,6 @@ export const object: ObjectDef = (...args) => {
   return mergeDefs(schema, ...args);
 };
 
-/** @type (key: string) => (...parts: SchemaPart[]) => Record<string, JSONSchema6Type>
- */
 const combinatory =
   (key) =>
   (parts, extra = {}) => ({
