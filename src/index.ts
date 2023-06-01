@@ -6,21 +6,7 @@ const isString = function (target: any): target is string {
   return typeof target === "string";
 };
 
-/**
- * @typedef { import('json-schema').JSONSchema6Type } JSONSchema6Type
- */
-
-/**
- * @typedef { string | object | null | JSONSchema6Type } SchemaPart
- */
-
-/**
- * @param {number} min
- * @param {number} max
- * @param {boolean} [minInc=true]
- * @param {boolean} [maxInc=true]
- */
-function groomRange(min, max, min_inc = true, max_inc = true) {
+function groomRange(min: number, max: number, min_inc = true, max_inc = true) {
   return {
     [min_inc ? "minimum" : "exclusiveMinimum"]: min,
     [max_inc ? "maximum" : "exclusiveMaximum"]: max,
@@ -47,63 +33,7 @@ const process_range = processIfHas(
   )
 );
 
-//  expand the shorthand content of `items`
-const expand_items = processIfHas("items", {
-  items: (items) =>
-    Array.isArray(items) ? items.map(shorthand) : shorthand(items),
-});
-
-function groom_required_properties(obj) {
-  if (!obj.properties) return obj;
-
-  let required = obj.required || [];
-
-  required = required.concat(
-    Object.keys(pickBy(obj.properties, prop("required")))
-  );
-  required.sort();
-
-  return u({
-    required: u.if(required.length > 0, required),
-    properties: u.map(u.omit(["required"])),
-  })(obj);
-}
-
-const process_array = processIfHas(
-  "array",
-  createPipe(
-    u(({ array: items }) => ({
-      type: "array",
-      items,
-    })),
-    u.omit(["array"])
-  )
-);
-
-const process_object = processIfHas(
-  "object",
-  createPipe(
-    u(({ object: properties }) => ({ type: "object", properties })),
-    u.omit(["object"])
-  )
-);
-
 const map_shorthand = u.if((x) => x, u.map(shorthand));
-
-const expand_shorthands = u({
-  not: u.if((x) => x, shorthand),
-  definitions: map_shorthand,
-  properties: map_shorthand,
-  anyOf: map_shorthand,
-  allOf: map_shorthand,
-  oneOf: map_shorthand,
-});
-
-const expandString = u.if(isString, (obj) =>
-  obj[0] === "$"
-    ? { $ref: obj.slice(1) }
-    : { [obj[0] === "#" ? "$ref" : "type"]: obj }
-);
 
 const basicType = [
   "string",
@@ -261,10 +191,8 @@ interface SimpleDef2<T> {
   <D extends Record<string, any>>(d: D): { type: T } & D;
 }
 
-const simpleDef =
-  (type: string) =>
-  (...options) =>
-    mergeDefs({ type }, ...options);
+const simpleDef = <S extends string>(type: S) =>
+  ((...options) => mergeDefs({ type }, ...options)) as SimpleDef<S>;
 
 interface SimpleDef<T> {
   (): { type: T };
@@ -276,11 +204,11 @@ interface SimpleDef<T> {
   <O extends {}>(schema: O): { type: T } & ExpandShorthand<O>;
 }
 
-export const number: SimpleDef<"number"> = simpleDef("number");
-export const integer: SimpleDef<"integer"> = simpleDef("integer");
-export const string: SimpleDef<"string"> = simpleDef("string");
-export const boolean: SimpleDef<"boolean"> = simpleDef("boolean");
-const _null: SimpleDef<"null"> = simpleDef("null");
+export const number = simpleDef("number");
+export const integer = simpleDef("integer");
+export const string = simpleDef("string");
+export const boolean = simpleDef("boolean");
+const _null = simpleDef("null");
 export { _null as null };
 
 interface ArrayDef {
@@ -338,8 +266,6 @@ export const object: ObjectDef = (...args) => {
   return mergeDefs(schema, ...args);
 };
 
-/** @type (key: string) => (...parts: SchemaPart[]) => Record<string, JSONSchema6Type>
- */
 const combinatory =
   (key) =>
   (parts, extra = {}) => ({

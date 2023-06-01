@@ -6,6 +6,8 @@ releases:
   - version: NEXT
     changes:
       - add j. prefixes in the README
+      - desc: remove unused code
+        type: chore
   - version: 3.0.0
     date: 20203-05-31
     changes:
