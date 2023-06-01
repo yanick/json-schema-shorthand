@@ -33,63 +33,7 @@ const process_range = processIfHas(
   )
 );
 
-//  expand the shorthand content of `items`
-const expand_items = processIfHas("items", {
-  items: (items) =>
-    Array.isArray(items) ? items.map(shorthand) : shorthand(items),
-});
-
-function groom_required_properties(obj) {
-  if (!obj.properties) return obj;
-
-  let required = obj.required || [];
-
-  required = required.concat(
-    Object.keys(pickBy(obj.properties, prop("required")))
-  );
-  required.sort();
-
-  return u({
-    required: u.if(required.length > 0, required),
-    properties: u.map(u.omit(["required"])),
-  })(obj);
-}
-
-const process_array = processIfHas(
-  "array",
-  createPipe(
-    u(({ array: items }) => ({
-      type: "array",
-      items,
-    })),
-    u.omit(["array"])
-  )
-);
-
-const process_object = processIfHas(
-  "object",
-  createPipe(
-    u(({ object: properties }) => ({ type: "object", properties })),
-    u.omit(["object"])
-  )
-);
-
 const map_shorthand = u.if((x) => x, u.map(shorthand));
-
-const expand_shorthands = u({
-  not: u.if((x) => x, shorthand),
-  definitions: map_shorthand,
-  properties: map_shorthand,
-  anyOf: map_shorthand,
-  allOf: map_shorthand,
-  oneOf: map_shorthand,
-});
-
-const expandString = u.if(isString, (obj) =>
-  obj[0] === "$"
-    ? { $ref: obj.slice(1) }
-    : { [obj[0] === "#" ? "$ref" : "type"]: obj }
-);
 
 const basicType = [
   "string",
