@@ -62,7 +62,7 @@ type RequiredProperties<T> = T extends { properties: infer P }
     }
   : T;
 
-type InnerExpandShorthand<T> = T extends `${infer X}!`
+type ExpandShorthand<T> = T extends `${infer X}!`
   ? ExpandShorthand<X> & { required: true }
   : T extends `#${infer X}`
   ? { $ref: T }
@@ -76,6 +76,16 @@ type InnerExpandShorthand<T> = T extends `${infer X}!`
     }
   : T extends { not: infer A }
   ? { not: ExpandShorthand<A> }
+  : T extends { integer: infer A }
+  ? { type: "integer" } & ExpandShorthand<Omit<T, "integer"> & A>
+  : T extends { number: infer A }
+  ? { type: "number" } & ExpandShorthand<Omit<T, "number"> & A>
+  : T extends { null: infer A }
+  ? { type: "null" } & ExpandShorthand<Omit<T, "null"> & A>
+  : T extends { string: infer A }
+  ? { type: "string" } & ExpandShorthand<Omit<T, "string"> & A>
+  : T extends { boolean: infer A }
+  ? { type: "boolean" } & ExpandShorthand<Omit<T, "boolean"> & A>
   : T extends { anyOf: infer A }
   ? { anyOf: { [k in keyof A]: ExpandShorthand<A[k]> } }
   : T extends { allOf: infer A }
@@ -93,8 +103,6 @@ type InnerExpandShorthand<T> = T extends `${infer X}!`
   : T extends { array: infer A }
   ? Omit<T, "array"> & { type: "array"; items: ExpandShorthand<A> }
   : RequiredProperties<T>;
-
-type ExpandShorthand<T> = InnerExpandShorthand<T>;
 
 const isBasicType = (s: any): s is BasicType => basicType.includes(s);
 
@@ -134,6 +142,16 @@ export function shorthand<S>(schema: S): ExpandShorthand<S> {
     array: u.skip,
     type: "array",
   });
+
+  basicType
+    .filter((t) => sc[t])
+    .forEach((type) => {
+      sc = u(sc, {
+        [type]: u.skip,
+        type,
+        ...sc[type],
+      });
+    });
 
   sc = u.if(sc, R.prop("properties"), {
     properties: u.map(shorthand),

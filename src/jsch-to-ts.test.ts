@@ -139,7 +139,7 @@ test("required properties", () => {
       bar: { type: "boolean" },
       baz: { $ref: "#/properties/bar" },
     },
-    required: ["foo","baz"],
+    required: ["foo", "baz"],
   });
 
   expectTypeOf(res).not.toMatchTypeOf<{
@@ -254,4 +254,10 @@ test("not", () => {
   let s: FromSchema<typeof res>;
 
   expectTypeOf(s).toMatchTypeOf<unknown>();
+});
+
+test("primitives shorthand", () => {
+  const res = shorthand({ string: { default: "foo" } } as const);
+  expect(res).toMatchObject({ type: "string", default: "foo" });
+  expectTypeOf(res).toMatchTypeOf<{ type: "string" }>();
 });
