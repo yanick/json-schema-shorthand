@@ -46,10 +46,7 @@ of `FromSchema<>`.
 ### `j.shorthand( schema )`
 
 Takes in a data structure
-and expands any shorthand (see next section) found in it. Note that because
-`json-schema-shorthand` is using
-[@yanick/updeep-remeda](https://www.npmjs.com/package/@yanick/updeep-remeda) internally, the returned schema
-is [frozen](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
+and expands any shorthand (see next section) found in it.
 
 Also the default export of `json-schema-shorthand`.
 

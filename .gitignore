@@ -9,3 +9,4 @@ pnpm-lock.yaml
 tsconfig.tsbuildinfo
 .perl-version
 *.orig
+pnpm-workspace.yaml

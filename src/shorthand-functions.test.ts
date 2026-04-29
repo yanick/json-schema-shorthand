@@ -1,65 +1,81 @@
-import { test, expect } from "vitest";
+import { test, expect, expectTypeOf } from "vitest";
 
 import { object, array, number, integer, string } from "./index.js";
+import * as j from './index.js';
 
 test("number", () => {
-  expect(number()).toMatchObject({ type: "number" });
+	expect(number()).toMatchObject({ type: "number" });
 
-  expect(number({ minimum: 3 })).toMatchObject({ type: "number", minimum: 3 }); //, "arguments");
+	expect(number({ minimum: 3 })).toMatchObject({ type: "number", minimum: 3 }); //, "arguments");
 });
 
 test("string", () => {
-  expect(string()).toMatchObject({ type: "string" }); //, "no argument");
+	expect(string()).toMatchObject({ type: "string" }); //, "no argument");
 
-  expect(string({ minimum: 3 })).toMatchObject({ type: "string", minimum: 3 }); //, "arguments");
+	expect(string({ minimum: 3 })).toMatchObject({ type: "string", minimum: 3 }); //, "arguments");
 });
 
 test("integer", () => {
-  expect(integer()).toMatchObject({ type: "integer" }); //, "no argument");
+	expect(integer()).toMatchObject({ type: "integer" }); //, "no argument");
 
-  expect(integer({ minimum: 3 })).toMatchObject({
-    type: "integer",
-    minimum: 3,
-  }); //, "arguments");
+	expect(integer({ minimum: 3 })).toMatchObject({
+		type: "integer",
+		minimum: 3,
+	}); //, "arguments");
 });
 
 test("array", () => {
-  expect(array()).toMatchObject({ type: "array" }); //, "no argument");
+	expect(array()).toMatchObject({ type: "array" }); //, "no argument");
 
-  expect(array("string")).toMatchObject({
-    type: "array",
-    items: { type: "string" },
-  });
+	expect(array("string")).toMatchObject({
+		type: "array",
+		items: { type: "string" },
+	});
 
-  expect(array("string", { minItems: 3 })).toMatchObject({
-    type: "array",
-    items: { type: "string" },
-    minItems: 3,
-  });
+	expect(array("string", { minItems: 3 })).toMatchObject({
+		type: "array",
+		items: { type: "string" },
+		minItems: 3,
+	});
 });
 
 test("object", () => {
-  expect(object()).toMatchObject({ type: "object" }); //, "no argument");
+	expect(object()).toMatchObject({ type: "object" }); //, "no argument");
 
-  expect(object({ foo: "string" })).toMatchObject({
-    type: "object",
-    properties: { foo: { type: "string" } },
-  });
-  //"w/ properties"
-  //);
+	expect(object({ foo: "string" })).toMatchObject({
+		type: "object",
+		properties: { foo: { type: "string" } },
+	});
+	//"w/ properties"
+	//);
 
-  expect(object({ foo: "string" }, { maxProperties: 3 })).toMatchObject({
-    type: "object",
-    properties: { foo: { type: "string" } },
-    maxProperties: 3,
-  });
+	expect(object({ foo: "string" }, { maxProperties: 3 })).toMatchObject({
+		type: "object",
+		properties: { foo: { type: "string" } },
+		maxProperties: 3,
+	});
 });
 
 test("with description", () => {
-  expect(object(null, "foo", { additionalProperties: true })).toMatchObject({
-    description: "foo",
-    additionalProperties: true,
-  });
-  //"turn the string into desc"
-  //);
+	expect(object(null, "foo", { additionalProperties: true })).toMatchObject({
+		description: "foo",
+		additionalProperties: true,
+	});
+	//"turn the string into desc"
+	//);
 });
+
+test('not', () => {
+	const schema = j.not(j.number());
+	expect(schema).toMatchObject({
+		not: {
+			type: 'number'
+		}
+	});
+	expectTypeOf(schema).toExtend<{
+		not: {
+			type: 'number'
+		}
+	}>();
+
+})
